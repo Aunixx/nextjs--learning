@@ -9,7 +9,7 @@ import floor2 from "../public/floor-2.png";
 import floorroughness from "../public/floor-roughness.png";
 import floornormal from "../public/floor-normal.png";
 import floorheight from "../public/floor-height.png";
-import woodBright from "../public/Wood-bright.jpg";
+import woodBright from "../public/Wood-bright.png";
 // import studioLight from "../public/studiolight.obj";
 import {
   Html,
