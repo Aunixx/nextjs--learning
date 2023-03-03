@@ -1,4 +1,4 @@
-import { useThree, useLoader, useFrame } from "@react-three/fiber";
+import { useThree, useLoader, useFrame, extend } from "@react-three/fiber";
 import React, { use, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { SpotLightShadow, TextureLoader } from "three";
@@ -28,10 +28,17 @@ import {
   Clone,
   Sky,
   Stars,
+  Center,
+  Float,
 } from "@react-three/drei";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
+import marker from "../public/regular.json";
+
+extend({ TextGeometry });
 
 function RightWall({ temp = new THREE.Object3D() }) {
   const ref = useRef();
@@ -195,10 +202,11 @@ export default function Test() {
   // const t2 = useLoader(TextureLoader, "./Grand560.jpg");
   // const t3 = useLoader(TextureLoader, "./01.jpg");
   // const carpetmap = useLoader(TextureLoader, "./carpettexture.jpg");
-  // const matCap = useMatcapTexture("291912_473531_3C2C25_3A2424", 256);
+  const [matCaptexture] = useMatcapTexture("686B73_2A2B2D_D5D9DD_B0B3BC", 256);
   const ringref = useRef();
   const light = useRef();
   const meshRef = useRef();
+  const font = new FontLoader().parse(marker);
   // console.log(bed2);
 
   // grass.children[0].material.map = grassTexture;
@@ -506,6 +514,35 @@ export default function Test() {
             />
           </group>
           <mesh position={[0, 4.55, 0]} receiveShadow castShadow>
+            <boxGeometry args={[10, 0.1, 10]} />
+            <meshStandardMaterial map={map} metalness={0} roughness={4} />
+          </mesh>
+          <Float
+            speed={3} // Animation speed, defaults to 1
+            rotationIntensity={0.3} // XYZ rotation intensity, defaults to 1
+            floatIntensity={1} // Up/down float intensity, works like a multiplier with floatingRange,defaults to 1
+            floatingRange={[0, 1]}
+          >
+            <Center position={[0, 2, 0]} scale={[0.7, 0.7, 0.7]}>
+              <Text3D
+                // map={matCap}
+                font={marker}
+                castShadow
+                receiveShadow
+                rotation={[0, Math.PI / 2, 0]}
+                curveSegments={12}
+                bevelEnabled
+                bevelThickness={0.02}
+                bevelSize={0.02}
+                bevelOffset={0}
+                bevelSegments={5}
+              >
+                Sahil E Arwand
+                <meshMatcapMaterial matcap={matCaptexture} />
+              </Text3D>
+            </Center>
+          </Float>
+          <mesh position={[0, 6.55, 0]} receiveShadow castShadow>
             <boxGeometry args={[10, 0.1, 10]} />
             <meshStandardMaterial map={map} metalness={0} roughness={4} />
           </mesh>
