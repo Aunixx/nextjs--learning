@@ -6,7 +6,7 @@ import floor from "../public/floor.png";
 import darkWood from "../public/dark_wood.png";
 import darkWoodRoughness from "../public/dark_wood_roughness.png";
 import floor2 from "../public/floor-2.png";
-import floorroughness from "../public/floor-roughness.png";
+// import floorroughness from "../public/floor-roughness.png";
 import floornormal from "../public/floor-normal.png";
 import floorheight from "../public/floor-height.png";
 import woodBright from "../public/Wood-Bright.png";
@@ -60,7 +60,6 @@ function RightWall({ temp = new THREE.Object3D() }) {
 function LeftWall({ temp = new THREE.Object3D() }) {
   const ref = useRef();
   const map = useLoader(TextureLoader, darkWood.src);
-  const roughness = useLoader(TextureLoader, darkWoodRoughness.src);
   //   const color = useMemo(() => new THREE.Color().setHex(0x00ff), []);
   // useEffect(() => {
   //   for (let i = 0; i < 100; i++) {
@@ -127,7 +126,7 @@ function LeftWall({ temp = new THREE.Object3D() }) {
 function Floor({ temp = new THREE.Object3D() }) {
   const ref = useRef();
   const map = useLoader(TextureLoader, floor2.src);
-  const roughness = useLoader(TextureLoader, floorroughness.src);
+  // const roughness = useLoader(TextureLoader, floorroughness.src);
   const height = useLoader(TextureLoader, floorheight.src);
   const normal = useLoader(TextureLoader, floornormal.src);
   ref.receiveShadow = true;
