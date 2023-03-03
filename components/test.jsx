@@ -36,7 +36,6 @@ import { Bloom, EffectComposer } from "@react-three/postprocessing";
 function RightWall({ temp = new THREE.Object3D() }) {
   const ref = useRef();
   const map = useLoader(TextureLoader, "./Wood-Bright.jpg");
-  const roughness = useLoader(TextureLoader, darkWoodRoughness.src);
   //   const color = useMemo(() => new THREE.Color().setHex(0x00ff), []);
   // useEffect(() => {
   //   for (let i = 0; i < 100; i++) {
@@ -53,12 +52,7 @@ function RightWall({ temp = new THREE.Object3D() }) {
   return (
     <mesh position={[0, Math.PI / 7, 0]} receiveShadow>
       <boxGeometry args={[10, 0.1, 10]} />
-      <meshStandardMaterial
-        map={map}
-        roughnessMap={roughness}
-        metalness={0}
-        roughness={4}
-      />
+      <meshStandardMaterial map={map} metalness={0} roughness={4} />
     </mesh>
   );
 }
