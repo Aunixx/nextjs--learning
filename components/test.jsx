@@ -9,6 +9,8 @@ import floor2 from "../public/floor-2.png";
 import floorroughness from "../public/floor-roughness.png";
 import floornormal from "../public/floor-normal.png";
 import floorheight from "../public/floor-height.png";
+import woodBright from "../public/Wood-bright.jpg";
+// import studioLight from "../public/studiolight.obj";
 import {
   Html,
   OrbitControls,
@@ -33,7 +35,7 @@ import { Bloom, EffectComposer } from "@react-three/postprocessing";
 
 function RightWall({ temp = new THREE.Object3D() }) {
   const ref = useRef();
-  const map = useLoader(TextureLoader, "./Wood-bright.jpg");
+  const map = useLoader(TextureLoader, woodBright.src);
   const roughness = useLoader(TextureLoader, darkWoodRoughness.src);
   //   const color = useMemo(() => new THREE.Color().setHex(0x00ff), []);
   // useEffect(() => {
@@ -198,7 +200,7 @@ export default function Test() {
   // const t1 = useLoader(TextureLoader, "./Ecostil3.jpg");
   // const t2 = useLoader(TextureLoader, "./Grand560.jpg");
   // const t3 = useLoader(TextureLoader, "./01.jpg");
-  const carpetmap = useLoader(TextureLoader, "./carpettexture.jpg");
+  // const carpetmap = useLoader(TextureLoader, "./carpettexture.jpg");
   // const matCap = useMatcapTexture("291912_473531_3C2C25_3A2424", 256);
   const ringref = useRef();
   const light = useRef();
@@ -502,7 +504,7 @@ export default function Test() {
           position={[2, 0.65, 4.51]}
         /> */}
 
-        <mesh
+        {/* <mesh
           rotation={[Math.PI / 2, 0, 0]}
           position={[-3, 0.5, 0.2]}
           scale={[5, 5, 5]}
@@ -511,7 +513,7 @@ export default function Test() {
         >
           <planeGeometry />
           <meshStandardMaterial map={carpetmap} side={THREE.DoubleSide} />
-        </mesh>
+        </mesh> */}
 
         <mesh rotation={[0, 0, Math.PI / 2]} position={[5, 5.5, 0]}>
           <boxGeometry args={[10, 0.1, 10]} />
