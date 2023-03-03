@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import { Canvas, useThree, useLoader, useFrame } from "@react-three/fiber";
 import Test from "@/components/test";
+import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,9 +19,11 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Canvas shadows={true}>
-        <Test />
-      </Canvas>
+      <Suspense fallback={<h1>Loading</h1>}>
+        <Canvas shadows={true}>
+          <Test />
+        </Canvas>
+      </Suspense>
     </>
   );
 }

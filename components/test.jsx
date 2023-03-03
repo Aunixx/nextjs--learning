@@ -28,6 +28,7 @@ import {
   Stars,
 } from "@react-three/drei";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 
 function RightWall({ temp = new THREE.Object3D() }) {
@@ -189,16 +190,21 @@ export default function Test() {
   const lamp = useLoader(OBJLoader, "./studiolight.obj");
   const grassTexture = useLoader(TextureLoader, "./grass.jpg");
   const grass = useLoader(OBJLoader, "./grass.obj");
-  // const bed = useLoader(OBJLoader, "./bed.obj");
+  const tv = useLoader(GLTFLoader, "./tvunit.glb");
+  const bed2 = useLoader(OBJLoader, "./bed2.obj");
   const roughness = useLoader(TextureLoader, darkWoodRoughness.src);
   const map = useLoader(TextureLoader, darkWood.src);
   const wood = useLoader(TextureLoader, "./Wood-Dark.jpg");
+  const t1 = useLoader(TextureLoader, "./Ecostil3.jpg");
+  const t2 = useLoader(TextureLoader, "./Grand560.jpg");
+  const t3 = useLoader(TextureLoader, "./01.jpg");
   const carpetmap = useLoader(TextureLoader, "./carpettexture.jpg");
   const matCap = useMatcapTexture("291912_473531_3C2C25_3A2424", 256);
   const ringref = useRef();
   const light = useRef();
   const meshRef = useRef();
-  console.log(grass);
+  console.log(bed2);
+
   grass.children[0].material.map = grassTexture;
   grass.children[0].receiveShadow = false;
   // useHelper(light, THREE.SpotLightHelper);
@@ -216,6 +222,14 @@ export default function Test() {
     stair.children[i].material.shininess = 100;
     stair.children[i].material.map = map;
   }
+  for (let i = 0; i < bed2.children.length; i++) {
+    bed2.children[i].castShadow = true;
+    bed2.children[i].receiveShadow = true;
+    // stair.children[i].material.toneMapped = false;
+    bed2.children[i].material.map = t1;
+  }
+  bed2.children[3].material.map = t2;
+  bed2.children[0].material.map = t3;
   for (let i = 0; i < lamp.children.length; i++) {
     // stair.children[i].castShadow = true;
     // lamp.children[i].material.color = "black";
@@ -459,7 +473,7 @@ export default function Test() {
           castShadow={true}
           scale={[1, 1, 1]}
           rotation={[0, Math.PI / -2, 0]}
-          position={[5.3, Math.PI / 7, -4.49]}
+          position={[4.85, Math.PI / 7, 2]}
         />
 
         <Clone
@@ -480,10 +494,10 @@ export default function Test() {
         />
 
         <primitive
-          object={bed}
-          scale={[0.003, 0.003, 0.003]}
-          rotation={[0, 0, 0]}
-          position={[-4.9, 0.5, 0]}
+          object={bed2}
+          scale={[0.001, 0.001, 0.001]}
+          rotation={[0, Math.PI / 2, 0]}
+          position={[-3.7, 0.5, 0]}
         />
         <primitive
           object={grass}
@@ -491,22 +505,25 @@ export default function Test() {
           rotation={[Math.PI / -2, 0, 0]}
           position={[-4.9, -8, 0]}
         />
+        <primitive
+          object={tv.scene}
+          scale={[0.1, 0.1, 0.1]}
+          rotation={[0, 0, 0]}
+          position={[2, 0.65, 4.51]}
+        />
 
         <mesh
           rotation={[Math.PI / 2, 0, 0]}
           position={[-3, 0.5, 0.2]}
           scale={[5, 5, 5]}
           receiveShadow
+          castShadow
         >
           <planeGeometry />
           <meshStandardMaterial map={carpetmap} side={THREE.DoubleSide} />
         </mesh>
 
-        <mesh
-          receiveShadow
-          rotation={[0, 0, Math.PI / 2]}
-          position={[5, 5.5, 0]}
-        >
+        <mesh rotation={[0, 0, Math.PI / 2]} position={[5, 5.5, 0]}>
           <boxGeometry args={[10, 0.1, 10]} />
           <meshPhysicalMaterial
             // color={"#363636"}
