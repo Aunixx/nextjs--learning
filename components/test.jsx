@@ -35,7 +35,7 @@ import { Bloom, EffectComposer } from "@react-three/postprocessing";
 
 function RightWall({ temp = new THREE.Object3D() }) {
   const ref = useRef();
-  const map = useLoader(TextureLoader, woodBright.src);
+  const map = useLoader(TextureLoader, "./Wood-Bright.jpg");
   const roughness = useLoader(TextureLoader, darkWoodRoughness.src);
   //   const color = useMemo(() => new THREE.Color().setHex(0x00ff), []);
   // useEffect(() => {
