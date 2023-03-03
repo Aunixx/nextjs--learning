@@ -182,64 +182,64 @@ function Roof({ temp = new THREE.Object3D() }) {
   );
 }
 export default function Test() {
-  const fbx = useFBX("./sofa.fbx");
-  const bed = useFBX("./bed.fbx");
+  // const fbx = useFBX("./sofa.fbx");
+  // const bed = useFBX("./bed.fbx");
   // const carpet = useFBX("./carpet.fbx");
-  const obj = useLoader(OBJLoader, "./sofa.obj");
-  const stair = useLoader(OBJLoader, "./stair.obj");
+  // const obj = useLoader(OBJLoader, "./sofa.obj");
+  // const stair = useLoader(OBJLoader, "./stair.obj");
   const lamp = useLoader(OBJLoader, "./studiolight.obj");
-  const grassTexture = useLoader(TextureLoader, "./grass.jpg");
-  const grass = useLoader(OBJLoader, "./grass.obj");
-  const tv = useLoader(GLTFLoader, "./tvunit.glb");
-  const bed2 = useLoader(OBJLoader, "./bed2.obj");
-  const roughness = useLoader(TextureLoader, darkWoodRoughness.src);
+  // const grassTexture = useLoader(TextureLoader, "./grass.jpg");
+  // const grass = useLoader(OBJLoader, "./grass.obj");
+  // const tv = useLoader(GLTFLoader, "./tvunit.glb");
+  // const bed2 = useLoader(OBJLoader, "./bed2.obj");
+  // const roughness = useLoader(TextureLoader, darkWoodRoughness.src);
   const map = useLoader(TextureLoader, darkWood.src);
-  const wood = useLoader(TextureLoader, "./Wood-Dark.jpg");
-  const t1 = useLoader(TextureLoader, "./Ecostil3.jpg");
-  const t2 = useLoader(TextureLoader, "./Grand560.jpg");
-  const t3 = useLoader(TextureLoader, "./01.jpg");
+  // const wood = useLoader(TextureLoader, "./Wood-Dark.jpg");
+  // const t1 = useLoader(TextureLoader, "./Ecostil3.jpg");
+  // const t2 = useLoader(TextureLoader, "./Grand560.jpg");
+  // const t3 = useLoader(TextureLoader, "./01.jpg");
   const carpetmap = useLoader(TextureLoader, "./carpettexture.jpg");
-  const matCap = useMatcapTexture("291912_473531_3C2C25_3A2424", 256);
+  // const matCap = useMatcapTexture("291912_473531_3C2C25_3A2424", 256);
   const ringref = useRef();
   const light = useRef();
   const meshRef = useRef();
-  console.log(bed2);
+  // console.log(bed2);
 
-  grass.children[0].material.map = grassTexture;
-  grass.children[0].receiveShadow = false;
-  // useHelper(light, THREE.SpotLightHelper);
-  for (let i = 0; i < obj.children.length; i++) {
-    obj.children[i].material.color.r = Math.random() * 1;
-    obj.children[i].material.color.g = Math.random() * 1;
-    obj.children[i].material.color.b = Math.random() * 1;
-    obj.children[i].castShadow = true;
-    obj.children[i].receiveShadow = true;
-    // lamp.children[i].material.map = map;
-  }
-  for (let i = 0; i < stair.children.length; i++) {
-    stair.children[i].castShadow = true;
-    // stair.children[i].material.toneMapped = false;
-    stair.children[i].material.shininess = 100;
-    stair.children[i].material.map = map;
-  }
-  for (let i = 0; i < bed2.children.length; i++) {
-    bed2.children[i].castShadow = true;
-    bed2.children[i].receiveShadow = true;
-    // stair.children[i].material.toneMapped = false;
-    bed2.children[i].material.map = t1;
-  }
-  bed2.children[3].material.map = t2;
-  bed2.children[0].material.map = t3;
-  for (let i = 0; i < lamp.children.length; i++) {
-    // stair.children[i].castShadow = true;
-    // lamp.children[i].material.color = "black";
-    // lamp.children[i].material.toneMapped = false;
-    lamp.children[i].material.color = [0, 0, 0];
-  }
-  for (let i = 0; i < bed.children.length; i++) {
-    bed.children[i].castShadow = true;
-    bed.children[i].receive = true;
-  }
+  // grass.children[0].material.map = grassTexture;
+  // grass.children[0].receiveShadow = false;
+  // // useHelper(light, THREE.SpotLightHelper);
+  // for (let i = 0; i < obj.children.length; i++) {
+  //   obj.children[i].material.color.r = Math.random() * 1;
+  //   obj.children[i].material.color.g = Math.random() * 1;
+  //   obj.children[i].material.color.b = Math.random() * 1;
+  //   obj.children[i].castShadow = true;
+  //   obj.children[i].receiveShadow = true;
+  //   // lamp.children[i].material.map = map;
+  // }
+  // for (let i = 0; i < stair.children.length; i++) {
+  //   stair.children[i].castShadow = true;
+  //   // stair.children[i].material.toneMapped = false;
+  //   stair.children[i].material.shininess = 100;
+  //   stair.children[i].material.map = map;
+  // }
+  // for (let i = 0; i < bed2.children.length; i++) {
+  //   bed2.children[i].castShadow = true;
+  //   bed2.children[i].receiveShadow = true;
+  //   // stair.children[i].material.toneMapped = false;
+  //   bed2.children[i].material.map = t1;
+  // }
+  // bed2.children[3].material.map = t2;
+  // bed2.children[0].material.map = t3;
+  // for (let i = 0; i < lamp.children.length; i++) {
+  //   // stair.children[i].castShadow = true;
+  //   // lamp.children[i].material.color = "black";
+  //   // lamp.children[i].material.toneMapped = false;
+  //   lamp.children[i].material.color = [0, 0, 0];
+  // }
+  // for (let i = 0; i < bed.children.length; i++) {
+  //   bed.children[i].castShadow = true;
+  //   bed.children[i].receive = true;
+  // }
 
   // stair.traverse(function (child) {
   //   if (child.isMesh) {
