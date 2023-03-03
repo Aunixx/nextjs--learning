@@ -253,16 +253,6 @@ export default function Test() {
   });
   return (
     <>
-      <Stars
-        radius={100}
-        depth={50}
-        count={10000}
-        factor={5}
-        saturation={10}
-        fade
-        speed={1}
-      />
-      <Sky sunPosition={[1, 0, 10]} azimuth={0.55} cas />
       <ambientLight args={[0xffffff, 0.1]} />
       <EffectComposer>
         <Bloom mipmapBlur />
@@ -468,7 +458,7 @@ export default function Test() {
         <LeftWall />
         <RightWall />
         {/* <Roof /> */}
-        <primitive
+        {/* <primitive
           object={obj}
           castShadow={true}
           scale={[1, 1, 1]}
@@ -510,7 +500,7 @@ export default function Test() {
           scale={[0.1, 0.1, 0.1]}
           rotation={[0, 0, 0]}
           position={[2, 0.65, 4.51]}
-        />
+        /> */}
 
         <mesh
           rotation={[Math.PI / 2, 0, 0]}
