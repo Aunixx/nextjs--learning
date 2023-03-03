@@ -81,6 +81,7 @@ function LeftWall({ temp = new THREE.Object3D() }) {
         receiveShadow
         rotation={[0, 0, Math.PI / 2]}
         position={[-5, 5.5, 0]}
+        castShadow
       >
         <boxGeometry args={[10, 0.1, 10]} />
         <meshStandardMaterial
@@ -182,7 +183,7 @@ export default function Test() {
   // const carpet = useFBX("./carpet.fbx");
   // const obj = useLoader(OBJLoader, "./sofa.obj");
   // const stair = useLoader(OBJLoader, "./stair.obj");
-  const lamp = useLoader(OBJLoader, "./studiolight.obj");
+  const lamp = useLoader(OBJLoader, "./light.obj");
   // const grassTexture = useLoader(TextureLoader, "./grass.jpg");
   // const grass = useLoader(OBJLoader, "./grass.obj");
   // const tv = useLoader(GLTFLoader, "./tvunit.glb");
@@ -202,7 +203,8 @@ export default function Test() {
 
   // grass.children[0].material.map = grassTexture;
   // grass.children[0].receiveShadow = false;
-  // // useHelper(light, THREE.SpotLightHelper);
+  // useHelper(light, THREE.SpotLightHelper);
+  light?.current?.target.position.set(-0.5, 0, 0);
   // for (let i = 0; i < obj.children.length; i++) {
   //   obj.children[i].material.color.r = Math.random() * 1;
   //   obj.children[i].material.color.g = Math.random() * 1;
@@ -254,37 +256,263 @@ export default function Test() {
       </EffectComposer>
       {/* <BakeShadows /> */}
       <group position={[0, -1.5, 0]}>
-        <group position={[0, 1.47, 0]}>
-          <spotLight
-            args={[0xffffff, 0.1, 100]}
-            position={[2.45, 2, 0]}
-            rotation={[1, 1, 1]}
-            ref={light}
-            castShadow
-            shadow-mapSize={[1024 * 2, 1024 * 2]}
-          />
-          <mesh
-            castShadow={true}
-            rotation={[Math.PI / 2.2, Math.PI / -3.3, 0]}
-            position={[2.39, 2.78, -0.05]}
-            scale={[0.0004, 0.0004, 0.0004]}
-          >
-            <circleGeometry args={[100, 100]} castShadow={true} />
-            <meshStandardMaterial
-              color="white"
-              emissive={"white"}
-              emissiveIntensity={10}
-              toneMapped={false}
+        <group position={[0, 0, 0]}>
+          <group position={[0, 1.47, 0]}>
+            <spotLight
+              args={[0xffffff, 0.2, 100, 100]}
+              position={[2.43, 2.8, -0.05]}
+              rotation={[0, 0, 0]}
+              // target={{ position: [1, 0, 0] }}
+              ref={light}
+              castShadow
+              shadow-mapSize={[1024 * 2, 1024 * 2]}
             />
+            <mesh
+              castShadow={true}
+              rotation={[Math.PI / 2, Math.PI / -5, 0]}
+              position={[2.45, 2.825, -0.05]}
+              scale={[0.0004, 0.0004, 0.0004]}
+            >
+              <circleGeometry args={[100, 100]} castShadow={true} />
+              <meshStandardMaterial
+                color="white"
+                emissive={"white"}
+                emissiveIntensity={10}
+                toneMapped={false}
+              />
+            </mesh>
+            <Clone
+              object={lamp}
+              scale={[0.01, 0.01, 0.01]}
+              rotation={[0, Math.PI / -2, 0]}
+              position={[2.45, 2.8, 0]}
+            />
+          </group>
+          <group position={[0, 1.47, 2]} rotation={[0, -2, 0]}>
+            <spotLight
+              args={[0xffffff, 0.2, 100, 100]}
+              position={[2.43, 2.8, -0.05]}
+              rotation={[0, 0, 0]}
+              // target={{ position: [1, 0, 0] }}
+              ref={light}
+              castShadow
+              shadow-mapSize={[1024 * 2, 1024 * 2]}
+            />
+            <mesh
+              castShadow={true}
+              rotation={[Math.PI / 2, Math.PI / -5, 0]}
+              position={[2.45, 2.825, -0.05]}
+              scale={[0.0004, 0.0004, 0.0004]}
+            >
+              <circleGeometry args={[100, 100]} castShadow={true} />
+              <meshStandardMaterial
+                color="white"
+                emissive={"white"}
+                emissiveIntensity={10}
+                toneMapped={false}
+              />
+            </mesh>
+            <Clone
+              object={lamp}
+              scale={[0.01, 0.01, 0.01]}
+              rotation={[0, Math.PI / -2, 0]}
+              position={[2.45, 2.8, 0]}
+            />
+          </group>
+          <group position={[0, 1.47, -2]} rotation={[0, 2, 0]}>
+            <spotLight
+              args={[0xffffff, 0.2, 100, 100]}
+              position={[2.43, 2.8, -0.05]}
+              rotation={[0, 0, 0]}
+              // target={{ position: [1, 0, 0] }}
+              ref={light}
+              castShadow
+              shadow-mapSize={[1024 * 2, 1024 * 2]}
+            />
+            <mesh
+              castShadow={true}
+              rotation={[Math.PI / 2, Math.PI / -5, 0]}
+              position={[2.45, 2.825, -0.05]}
+              scale={[0.0004, 0.0004, 0.0004]}
+            >
+              <circleGeometry args={[100, 100]} castShadow={true} />
+              <meshStandardMaterial
+                color="white"
+                emissive={"white"}
+                emissiveIntensity={10}
+                toneMapped={false}
+              />
+            </mesh>
+            <Clone
+              object={lamp}
+              scale={[0.01, 0.01, 0.01]}
+              rotation={[0, Math.PI / -2, 0]}
+              position={[2.45, 2.8, 0]}
+            />
+          </group>
+          <group position={[0, 1.47, -1.5]} rotation={[0, 0.5, 0]}>
+            <spotLight
+              args={[0xffffff, 0.2, 100, 100]}
+              position={[2.43, 2.8, -0.05]}
+              rotation={[0, 0, 0]}
+              // target={{ position: [1, 0, 0] }}
+              ref={light}
+              castShadow
+              shadow-mapSize={[1024 * 2, 1024 * 2]}
+            />
+            <mesh
+              castShadow={true}
+              rotation={[Math.PI / 2, Math.PI / -5, 0]}
+              position={[2.45, 2.825, -0.05]}
+              scale={[0.0004, 0.0004, 0.0004]}
+            >
+              <circleGeometry args={[100, 100]} castShadow={true} />
+              <meshStandardMaterial
+                color="white"
+                emissive={"white"}
+                emissiveIntensity={10}
+                toneMapped={false}
+              />
+            </mesh>
+            <Clone
+              object={lamp}
+              scale={[0.01, 0.01, 0.01]}
+              rotation={[0, Math.PI / -2, 0]}
+              position={[2.45, 2.8, 0]}
+            />
+          </group>
+          <group position={[0, 1.47, 1.5]} rotation={[0, -0.5, 0]}>
+            <spotLight
+              args={[0xffffff, 0.2, 100, 100]}
+              position={[2.43, 2.8, -0.05]}
+              rotation={[0, 0, 0]}
+              // target={{ position: [1, 0, 0] }}
+              ref={light}
+              castShadow
+              shadow-mapSize={[1024 * 2, 1024 * 2]}
+            />
+            <mesh
+              castShadow={true}
+              rotation={[Math.PI / 2, Math.PI / -5, 0]}
+              position={[2.45, 2.825, -0.05]}
+              scale={[0.0004, 0.0004, 0.0004]}
+            >
+              <circleGeometry args={[100, 100]} castShadow={true} />
+              <meshStandardMaterial
+                color="white"
+                emissive={"white"}
+                emissiveIntensity={10}
+                toneMapped={false}
+              />
+            </mesh>
+            <Clone
+              object={lamp}
+              scale={[0.01, 0.01, 0.01]}
+              rotation={[0, Math.PI / -2, 0]}
+              position={[2.45, 2.8, 0]}
+            />
+          </group>
+          <group position={[0, 1.47, 1.5]} rotation={[0, -3, 0]}>
+            <spotLight
+              args={[0xffffff, 0.2, 100, 100]}
+              position={[2.43, 2.8, -0.05]}
+              rotation={[0, 0, 0]}
+              // target={{ position: [1, 0, 0] }}
+              ref={light}
+              castShadow
+              shadow-mapSize={[1024 * 2, 1024 * 2]}
+            />
+            <mesh
+              castShadow={true}
+              rotation={[Math.PI / 2, Math.PI / -5, 0]}
+              position={[2.45, 2.825, -0.05]}
+              scale={[0.0004, 0.0004, 0.0004]}
+            >
+              <circleGeometry args={[100, 100]} castShadow={true} />
+              <meshStandardMaterial
+                color="white"
+                emissive={"white"}
+                emissiveIntensity={10}
+                toneMapped={false}
+              />
+            </mesh>
+            <Clone
+              object={lamp}
+              scale={[0.01, 0.01, 0.01]}
+              rotation={[0, Math.PI / -2, 0]}
+              position={[2.45, 2.8, 0]}
+            />
+          </group>
+          <group position={[0, 1.47, -2]} rotation={[0, 2.8, 0]}>
+            <spotLight
+              args={[0xffffff, 0.2, 100, 100]}
+              position={[2.43, 2.8, -0.05]}
+              rotation={[0, 0, 0]}
+              // target={{ position: [1, 0, 0] }}
+              ref={light}
+              castShadow
+              shadow-mapSize={[1024 * 2, 1024 * 2]}
+            />
+            <mesh
+              castShadow={true}
+              rotation={[Math.PI / 2, Math.PI / -5, 0]}
+              position={[2.45, 2.825, -0.05]}
+              scale={[0.0004, 0.0004, 0.0004]}
+            >
+              <circleGeometry args={[100, 100]} castShadow={true} />
+              <meshStandardMaterial
+                color="white"
+                emissive={"white"}
+                emissiveIntensity={10}
+                toneMapped={false}
+              />
+            </mesh>
+            <Clone
+              object={lamp}
+              scale={[0.01, 0.01, 0.01]}
+              rotation={[0, Math.PI / -2, 0]}
+              position={[2.45, 2.8, 0]}
+            />
+          </group>
+          <group position={[0, 1.47, 0]} rotation={[0, 2.8, 0]}>
+            <spotLight
+              args={[0xffffff, 0.2, 100, 100]}
+              position={[2.43, 2.8, -0.05]}
+              rotation={[0, 0, 0]}
+              // target={{ position: [1, 0, 0] }}
+              ref={light}
+              castShadow
+              shadow-mapSize={[1024 * 2, 1024 * 2]}
+            />
+            <mesh
+              castShadow={true}
+              rotation={[Math.PI / 2, Math.PI / -5, 0]}
+              position={[2.45, 2.825, -0.05]}
+              scale={[0.0004, 0.0004, 0.0004]}
+            >
+              <circleGeometry args={[100, 100]} castShadow={true} />
+              <meshStandardMaterial
+                color="white"
+                emissive={"white"}
+                emissiveIntensity={10}
+                toneMapped={false}
+              />
+            </mesh>
+            <Clone
+              object={lamp}
+              scale={[0.01, 0.01, 0.01]}
+              rotation={[0, Math.PI / -2, 0]}
+              position={[2.45, 2.8, 0]}
+            />
+          </group>
+          <mesh position={[0, 4.55, 0]} receiveShadow castShadow>
+            <boxGeometry args={[10, 0.1, 10]} />
+            <meshStandardMaterial map={map} metalness={0} roughness={4} />
           </mesh>
-          <Clone
-            object={lamp}
-            scale={[0.01, 0.01, 0.01]}
-            rotation={[0, Math.PI / -2, 0.05]}
-            position={[2.45, 3, 0]}
-          />
+          <RightWall />
         </group>
-        <group position={[0, 1.47, 2]} rotation={[0, -2.4, 0]}>
+
+        {/* <group position={[0, 1.47, 2]} rotation={[0, -2.4, 0]}>
           <spotLight
             args={[0xffffff, 0.2, 500]}
             position={[2.45, 2, 0]}
@@ -408,18 +636,18 @@ export default function Test() {
             rotation={[0, Math.PI / -2, 0.05]}
             position={[2.45, 3, 0]}
           />
-        </group>
+        </group> */}
         {/* <Text3D toneMapped={false}>Sahil E Arwand</Text3D> */}
-        <mesh
-          ref={ringref}
+        {/* <mesh
+          // ref={ringref}
           rotation={[Math.PI / 2, 0, Math.PI / 4]}
           position={[-4.1, 4.5, -3.88]}
           castShadow
           receiveShadow
         >
-          <ringGeometry args={[1.1, 12, 4]} />
+          <planeGeometry args={[20, 20]} />
           <meshStandardMaterial map={map} side={THREE.DoubleSide} />
-        </mesh>
+        </mesh> */}
 
         {/* <AccumulativeShadows>
         <directionalLight
@@ -451,7 +679,7 @@ export default function Test() {
         {/* <ContactShadows rotation={[0, 0, 0]} position-y={0} opacity={0.5} /> */}
         {/* <Floor /> */}
         <LeftWall />
-        <RightWall />
+        {/* <RightWall /> */}
         {/* <Roof /> */}
         {/* <primitive
           object={obj}
@@ -508,7 +736,7 @@ export default function Test() {
           <meshStandardMaterial map={carpetmap} side={THREE.DoubleSide} />
         </mesh> */}
 
-        <mesh rotation={[0, 0, Math.PI / 2]} position={[5, 5.5, 0]}>
+        {/* <mesh rotation={[0, 0, Math.PI / 2]} position={[5, 5.5, 0]}>
           <boxGeometry args={[10, 0.1, 10]} />
           <meshPhysicalMaterial
             // color={"#363636"}
@@ -518,7 +746,7 @@ export default function Test() {
             roughness={0}
             transmission={0.9}
           />
-        </mesh>
+        </mesh> */}
         <mesh
           receiveShadow
           rotation={[Math.PI / 2, 0, 0]}
