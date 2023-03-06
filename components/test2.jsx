@@ -45,8 +45,8 @@ extend({ TextGeometry });
 
 function Boxes({ temp = new THREE.Object3D() }) {
   const ref = useRef();
-  const map = useLoader(TextureLoader, darkWood.src);
-  const roughness = useLoader(TextureLoader, darkWoodRoughness.src);
+  //   const map = useLoader(TextureLoader, darkWood.src);
+  //   const roughness = useLoader(TextureLoader, darkWoodRoughness.src);
   //   const [matCaptexture] = useMatcapTexture("787165_DAD9CD_9DC0CE_36302A", 256);
   //   const [matCaptexture] = useMatcapTexture("7877EE_D87FC5_75D9C7_1C78C0", 256);
   //   const [matCaptexture] = useMatcapTexture("6D1616_E6CDBA_DE2B24_230F0F", 256);
@@ -102,7 +102,7 @@ export default function Test2() {
   // const carpet = useFBX("./carpet.fbx");
   // const obj = useLoader(OBJLoader, "./sofa.obj");
   // const stair = useLoader(OBJLoader, "./stair.obj");
-  const lamp = useLoader(OBJLoader, "./light.obj");
+  //   const lamp = useLoader(OBJLoader, "./light.obj");
   const centerRef = useRef();
   // const grassTexture = useLoader(TextureLoader, "./grass.jpg");
   // const grass = useLoader(OBJLoader, "./grass.obj");
