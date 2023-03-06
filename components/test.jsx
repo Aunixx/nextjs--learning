@@ -10,6 +10,7 @@ import floor2 from "../public/floor-2.png";
 import floornormal from "../public/floor-normal.png";
 import floorheight from "../public/floor-height.png";
 import woodBright from "../public/Wood-Bright.png";
+
 // import studioLight from "../public/studiolight.obj";
 import {
   Html,
@@ -36,7 +37,8 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
-import marker from "../public/regular.json";
+import marker from "../public/regular3.json";
+import { Physics, RigidBody } from "@react-three/rapier";
 
 extend({ TextGeometry });
 
@@ -59,7 +61,7 @@ function RightWall({ temp = new THREE.Object3D() }) {
   return (
     <mesh position={[0, Math.PI / 7, 0]} receiveShadow>
       <boxGeometry args={[10, 0.1, 10]} />
-      <meshStandardMaterial map={map} metalness={0} roughness={4} />
+      <meshStandardMaterial map={map} metalness={0.7} roughness={0} />
     </mesh>
   );
 }
@@ -191,6 +193,7 @@ export default function Test() {
   // const obj = useLoader(OBJLoader, "./sofa.obj");
   // const stair = useLoader(OBJLoader, "./stair.obj");
   const lamp = useLoader(OBJLoader, "./light.obj");
+  const centerRef = useRef();
   // const grassTexture = useLoader(TextureLoader, "./grass.jpg");
   // const grass = useLoader(OBJLoader, "./grass.obj");
   // const tv = useLoader(GLTFLoader, "./tvunit.glb");
@@ -255,6 +258,7 @@ export default function Test() {
 
   useFrame((state, delta) => {
     // meshRef.current.rotation.x += 0.01;
+    // state.camera.position.set(centerRef.current.position);
   });
   return (
     <>
@@ -517,36 +521,48 @@ export default function Test() {
             <boxGeometry args={[10, 0.1, 10]} />
             <meshStandardMaterial map={map} metalness={0} roughness={4} />
           </mesh>
-          <Float
-            speed={3} // Animation speed, defaults to 1
-            rotationIntensity={0.3} // XYZ rotation intensity, defaults to 1
-            floatIntensity={1} // Up/down float intensity, works like a multiplier with floatingRange,defaults to 1
-            floatingRange={[0, 1]}
-          >
-            <Center position={[0, 2, 0]} scale={[0.7, 0.7, 0.7]}>
-              <Text3D
-                // map={matCap}
-                font={marker}
-                castShadow
-                receiveShadow
-                rotation={[0, Math.PI / 2, 0]}
-                curveSegments={12}
-                bevelEnabled
-                bevelThickness={0.02}
-                bevelSize={0.02}
-                bevelOffset={0}
-                bevelSegments={5}
+          <Physics>
+            <RigidBody position={[0, 1, 0]}>
+              {/* <Float
+                speed={3} // Animation speed, defaults to 1
+                rotationIntensity={0.3} // XYZ rotation intensity, defaults to 1
+                floatIntensity={1} // Up/down float intensity, works like a multiplier with floatingRange,defaults to 1
+                floatingRange={[0, 1]}
+              > */}
+              <Center
+                position={[0, 0, 0]}
+                scale={[0.7, 0.7, 0.7]}
+                ref={centerRef}
               >
-                Sahil E Arwand
-                <meshMatcapMaterial matcap={matCaptexture} />
-              </Text3D>
-            </Center>
-          </Float>
-          <mesh position={[0, 6.55, 0]} receiveShadow castShadow>
+                <Text3D
+                  // map={matCap}
+                  font={marker}
+                  castShadow
+                  receiveShadow
+                  rotation={[0, Math.PI / 2, 0]}
+                  curveSegments={12}
+                  bevelEnabled
+                  bevelThickness={0.02}
+                  bevelSize={0.02}
+                  bevelOffset={0}
+                  bevelSegments={5}
+                >
+                  Sahil E Arwand
+                  <meshMatcapMaterial matcap={matCaptexture} />
+                </Text3D>
+              </Center>
+              {/* </Float> */}
+            </RigidBody>
+            <RigidBody type="fixed">
+              <RightWall />
+            </RigidBody>
+          </Physics>
+          <mesh position={[0, 4.55, 0]} receiveShadow castShadow>
             <boxGeometry args={[10, 0.1, 10]} />
-            <meshStandardMaterial map={map} metalness={0} roughness={4} />
+            <meshMatcapMaterial matcap={matCaptexture} />
+
+            {/* <meshStandardMaterial map={map} metalness={0} roughness={4} /> */}
           </mesh>
-          <RightWall />
         </group>
 
         {/* <group position={[0, 1.47, 2]} rotation={[0, -2.4, 0]}>
