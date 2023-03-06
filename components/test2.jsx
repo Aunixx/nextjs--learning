@@ -109,7 +109,7 @@ export default function Test2() {
   // const tv = useLoader(GLTFLoader, "./tvunit.glb");
   // const bed2 = useLoader(OBJLoader, "./bed2.obj");
   // const roughness = useLoader(TextureLoader, darkWoodRoughness.src);
-  const map = useLoader(TextureLoader, darkWood.src);
+  //   const map = useLoader(TextureLoader, darkWood.src);
   // const wood = useLoader(TextureLoader, "./Wood-Dark.jpg");
   // const t1 = useLoader(TextureLoader, "./Ecostil3.jpg");
   // const t2 = useLoader(TextureLoader, "./Grand560.jpg");
