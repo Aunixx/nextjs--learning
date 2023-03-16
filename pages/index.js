@@ -25,7 +25,6 @@ export default function Home() {
           <Test2 />
         </Canvas>
       </Suspense>
-      <div>Sahil E Arwand</div>
     </>
   );
 }
