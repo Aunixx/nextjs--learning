@@ -1,17 +1,27 @@
 import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
+import styles from "@/styles/Home.module.scss";
 import { Canvas, useThree, useLoader, useFrame } from "@react-three/fiber";
 import Test from "@/components/test";
-import { Suspense } from "react";
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Test2 from "@/components/test2";
+import { useScroll } from "@react-hooks-library/core";
+// import { useScroll, animated } from "@react-spring/web";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   // const texture = useLoader(TextureLoader, map);
+  const canvasref = useRef();
+  // const [scroll, setScroll] = useState({ x: 0, y: 0 });
 
+  // useScroll(canvasref, ({ scrollX, scrollY }) =>
+  //   setScroll({ x: scrollX, y: scrollY })
+  // );
+  // useLayoutEffect(() => {
+  //   document.addEventListener("scroll", () => setScroll(window.scrollY));
+  // }, [scroll, canvasref]);
   return (
     <>
       <Head>
@@ -21,9 +31,18 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Suspense fallback={<h1>Loading</h1>}>
-        <Canvas shadows={true}>
-          <Test2 />
-        </Canvas>
+        <div ref={canvasref}>
+          <div className={styles.canvasWrapper}>
+            <Canvas
+              shadows={true}
+              // onCreated={({ camera }) => {
+              //   camera.position.set(0, 20, -1);
+              // }}
+            >
+              <Test2 />
+            </Canvas>
+          </div>
+        </div>
       </Suspense>
     </>
   );

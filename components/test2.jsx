@@ -1,5 +1,5 @@
 import { useThree, useLoader, useFrame, extend } from "@react-three/fiber";
-import React, { use, useEffect, useMemo, useRef } from "react";
+import React, { use, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { SpotLightShadow, TextureLoader } from "three";
 import floor from "../public/floor.png";
@@ -10,6 +10,7 @@ import floor2 from "../public/floor-2.png";
 import floornormal from "../public/floor-normal.png";
 import floorheight from "../public/floor-height.png";
 import woodBright from "../public/Wood-Bright.png";
+import { useScroll } from "@react-hooks-library/core";
 
 // import studioLight from "../public/studiolight.obj";
 import {
@@ -47,17 +48,27 @@ extend({ TextGeometry });
 
 export default function Test2() {
   const chair = useFBX("./chair.fbx");
+  const monitor = useFBX("./LED.fbx");
   // const desk = useFBX("./desk.fbx");
   // const carpet = useFBX("./carpet.fbx");
-  const monitor = useLoader(OBJLoader, "./monitor.obj");
-  const monitor2 = useLoader(OBJLoader, "./monitor.obj");
+  // const monitor = useLoader(OBJLoader, "./monitor.obj");
+  // const monitor2 = useLoader(OBJLoader, "./monitor.obj");
   const desk = useLoader(OBJLoader, "./office-desk.obj");
   // const stair = useLoader(OBJLoader, "./stair.obj");
   //   const lamp = useLoader(OBJLoader, "./light.obj");
+  const monitorRef = useRef();
+  const chairRef = useRef();
+  const deskRef = useRef();
   console.log(chair, "chair");
   console.log(monitor, "monitor");
   console.log(desk, "desk");
   const font = new FontLoader().parse(marker);
+  const [scroll, setScroll] = useState({ x: 0, y: 0 });
+
+  const { camera } = useThree();
+
+  // camera.position.set(0, 20, 5);
+  camera?.lookAt(monitorRef?.current?.position);
 
   useFrame((state, delta) => {
     // meshRef.current.rotation.x += 0.01;
@@ -65,41 +76,64 @@ export default function Test2() {
   });
   return (
     <>
-      <ambientLight args={[0xffffff, 0.01]} />
-      <pointLight position={[0, 70, 10]} />
+      <ambientLight args={[0x000000, 0.001]} />
+      <spotLight args={[0xffffff, 0.5]} position={[0, 50, 5]} />
       <OrbitControls />
       <mesh>
-        <planeGeometry args={[100, 100]} />
-        <meshBasicMaterial color={"gray"} />
+        <boxGeometry args={[100, 100, 1]} receiveShadow />
+        <meshStandardMaterial color={"gray"} />
       </mesh>
-      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, 50]}>
+      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, 50]} receiveShadow>
         <planeGeometry args={[100, 100]} />
-        <meshBasicMaterial color={"brown"} side={THREE.BackSide} />
+        <meshStandardMaterial color={"gray"} side={THREE.BackSide} />
       </mesh>
+
       <primitive
         object={chair}
+        ref={chairRef}
+        castShadow
         position={[0, 0, 12]}
         scale={[0.1, 0.1, 0.1]}
         rotation={[0, Math.PI / 1, 0]}
       />
       <primitive
         object={desk}
+        ref={deskRef}
+        castShadow
         position={[0, 0, 8]}
         scale={[0.35, 0.35, 0.35]}
       />
-
-      <primitive
-        object={monitor}
-        position={[3, 12.7, 0]}
-        scale={[0.3, 0.3, 0.3]}
-        rotation={[0, Math.PI / -1.7, 0]}
-      />
-      <Clone
+      <group>
+        {monitorRef && (
+          <Html
+            center
+            distanceFactor={1}
+            occlude={[monitorRef, deskRef, chairRef]}
+            transform
+            position={[3, 12.58, 2.19]}
+            rotation={[0, 0, 0]}
+          >
+            <div className="screen">
+              <h1>Sahil E Arwand</h1>
+              <h2>Hello</h2>
+            </div>
+          </Html>
+        )}
+        <primitive
+          castShadow
+          ref={monitorRef}
+          object={monitor}
+          position={[3, 12.3, 2]}
+          scale={[0.06, 0.06, 0.06]}
+          rotation={[Math.PI / -2, 0, Math.PI / 2]}
+        />
+      </group>
+      {/* <Clone
         object={monitor}
         position={[-5.1, 12.7, 0]}
         scale={[0.3, 0.3, 0.3]}
         rotation={[0, Math.PI / -2.2, 0]}
-      />
+      /> */}
     </>
   );
 }

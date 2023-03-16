@@ -1,0 +1,31 @@
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100%;
+  background-color: black;
+}
+canvas {
+  height: 100vh !important;
+  // position: fixed;
+  // top: 0;
+  // left: 0;
+  // bottom: 0;
+  // right: 0;
+  // min-width: 100%;
+  // min-height: 100%;
+}
+
+.screen {
+  background: linear-gradient(185deg, #132239 24.56%, #fa0339 176.52%);
+  color: white;
+  width: 2900px;
+  height: 1650px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  h1 {
+    font-size: 200px;
+  }
+}
