@@ -1,7 +1,7 @@
 import { useThree, useLoader, useFrame, extend } from "@react-three/fiber";
-import React, { use, useEffect, useMemo, useRef } from "react";
+import React, { use, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import { SpotLightShadow, TextureLoader } from "three";
+import { MeshBasicMaterial, SpotLightShadow, TextureLoader } from "three";
 import floor from "../public/floor.png";
 import darkWood from "../public/dark_wood.png";
 import darkWoodRoughness from "../public/dark_wood_roughness.png";
@@ -10,6 +10,7 @@ import floor2 from "../public/floor-2.png";
 import floornormal from "../public/floor-normal.png";
 import floorheight from "../public/floor-height.png";
 import woodBright from "../public/Wood-Bright.png";
+import { useScroll } from "@react-hooks-library/core";
 
 // import studioLight from "../public/studiolight.obj";
 import {
@@ -31,819 +32,197 @@ import {
   Stars,
   Center,
   Float,
+  ScrollControls,
+  Scroll,
 } from "@react-three/drei";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { Bloom, EffectComposer } from "@react-three/postprocessing";
+// import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import marker from "../public/regular3.json";
 import { Physics, RigidBody } from "@react-three/rapier";
+import gsap from "gsap";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+
+import vertexShader from "../components/shaders/vertex.glsl";
+import fragmentShader from "../components/shaders/fragment.glsl";
+import { WebGLRenderTarget } from "three";
+import { Bloom } from "@react-three/postprocessing";
 
 extend({ TextGeometry });
+extend({ UnrealBloomPass });
+extend({ RenderPass });
 
-function RightWall({ temp = new THREE.Object3D() }) {
-  const ref = useRef();
-  const map = useLoader(TextureLoader, "./Wood-Bright.jpg");
-  //   const color = useMemo(() => new THREE.Color().setHex(0x00ff), []);
-  // useEffect(() => {
-  //   for (let i = 0; i < 100; i++) {
-  //     //   temp.rotation.set(0.2618, 0, Math.PI / 2);
-  //     temp.rotation.set(0, 0, Math.PI / 2);
-
-  //     temp.position.set(-2.5, i * 2.58 + 5.5, i * -9.63);
-  //     temp.updateMatrix();
-  //     ref.current.setMatrixAt(i, temp.matrix);
-  //   }
-  //   ref.current.instanceMatrix.needsUpdate = true;
-  // }, []);
-
-  return (
-    <mesh position={[0, Math.PI / 7, 0]} receiveShadow>
-      <boxGeometry args={[10, 0.1, 10]} />
-      <meshStandardMaterial map={map} metalness={0.7} roughness={0} />
-    </mesh>
-  );
-}
-
-function LeftWall({ temp = new THREE.Object3D() }) {
-  const ref = useRef();
-  const map = useLoader(TextureLoader, darkWood.src);
-  //   const color = useMemo(() => new THREE.Color().setHex(0x00ff), []);
-  // useEffect(() => {
-  //   for (let i = 0; i < 100; i++) {
-  //     //   temp.rotation.set(0.2618, 0, Math.PI / 2);
-  //     temp.rotation.set(0, 0, Math.PI / 2);
-
-  //     temp.position.set(2.5, i * 2.58 + 5.5, i * -9.63);
-  //     temp.updateMatrix();
-  //     temp.receiveShadow = true;
-  //     ref.current.setMatrixAt(i, temp.matrix);
-  //   }
-  //   ref.current.instanceMatrix.needsUpdate = true;
-  // }, []);
-
-  return (
-    <>
-      {/* <ambientLight args={[0xffffff, 4, 100]} /> */}
-      <mesh
-        receiveShadow
-        rotation={[0, 0, Math.PI / 2]}
-        position={[-5, 5.5, 0]}
-        castShadow
-      >
-        <boxGeometry args={[10, 0.1, 10]} />
-        <meshStandardMaterial
-          color={"#363636"}
-          metalness={0}
-          // map={map}
-          // roughnessMap={roughness}
-          roughness={1}
-        />
-      </mesh>
-    </>
-  );
-}
-// function LeftWall({ temp = new THREE.Object3D() }) {
-//   const ref = useRef();
-//   const map = useLoader(TextureLoader, darkWood.src);
-//   const roughness = useLoader(TextureLoader, darkWoodRoughness.src);
-//   //   const color = useMemo(() => new THREE.Color().setHex(0x00ff), []);
-//   useEffect(() => {
-//     for (let i = 0; i < 100; i++) {
-//       //   temp.rotation.set(0.2618, 0, Math.PI / 2);
-//       temp.rotation.set(0, 0, Math.PI / 2);
-
-//       temp.position.set(2.5, i * 2.58 + 5.5, i * -9.63);
-//       temp.updateMatrix();
-//       temp.receiveShadow = true;
-//       ref.current.setMatrixAt(i, temp.matrix);
-//     }
-//     ref.current.instanceMatrix.needsUpdate = true;
-//   }, []);
-
-//   return (
-//     <>
-//       {/* <ambientLight args={[0xffffff, 4, 100]} /> */}
-//       <instancedMesh ref={ref} args={[null, null, 100]}>
-//         <boxGeometry args={[10, 0.1, 10]} />
-//         <meshStandardMaterial map={map} roughnessMap={roughness} />
-//       </instancedMesh>
-//     </>
-//   );
-// }
-
-function Floor({ temp = new THREE.Object3D() }) {
-  const ref = useRef();
-  const map = useLoader(TextureLoader, floor2.src);
-  // const roughness = useLoader(TextureLoader, floorroughness.src);
-  const height = useLoader(TextureLoader, floorheight.src);
-  const normal = useLoader(TextureLoader, floornormal.src);
-  ref.receiveShadow = true;
-
-  //   const color = useMemo(() => new THREE.Color().setHex(0x00ff), []);
-  // useEffect(() => {
-  //   for (let i = 0; i < 100; i++) {
-  //     temp.rotation.set(0, 0, 0);
-
-  //     temp.position.set(0, i * 2.58, i * -9.63);
-  //     temp.receiveShadow = true;
-  //     temp.updateMatrix();
-  //     ref.current.setMatrixAt(i, temp.matrix);
-  //   }
-  //   ref.current.instanceMatrix.needsUpdate = true;
-  // }, []);
-
-  return (
-    <mesh ref={ref} receiveShadow={true} rotation={[0, 0, 0]}>
-      <boxGeometry args={[5, 1, 10]} receiveShadow={true} />
-      <meshBasicMaterial color="white" receiveShadow={true} />
-    </mesh>
-  );
-}
-function Roof({ temp = new THREE.Object3D() }) {
-  const ref = useRef();
-  // const map = useLoader(TextureLoader, darkWood.src);
-  // const roughness = useLoader(TextureLoader, darkWoodRoughness.src);
-
-  //   const color = useMemo(() => new THREE.Color().setHex(0x00ff), []);
-  useEffect(() => {
-    for (let i = 0; i < 100; i++) {
-      temp.rotation.set(0, 0, 0);
-
-      temp.position.set(0, i * 2.58 + 5, i * -9.63);
-      temp.receiveShadow = true;
-      temp.updateMatrix();
-      ref.current.setMatrixAt(i, temp.matrix);
-    }
-    ref.current.instanceMatrix.needsUpdate = true;
-  }, []);
-
-  return (
-    <instancedMesh ref={ref} args={[null, null, 100]}>
-      <boxGeometry args={[5, 1, 10]} />
-      <meshStandardMaterial map={map} metalness={20} roughnessMap={roughness} />
-    </instancedMesh>
-  );
-}
 export default function Test() {
-  // const fbx = useFBX("./sofa.fbx");
-  // const bed = useFBX("./bed.fbx");
-  // const carpet = useFBX("./carpet.fbx");
-  // const obj = useLoader(OBJLoader, "./sofa.obj");
-  // const stair = useLoader(OBJLoader, "./stair.obj");
-  const lamp = useLoader(OBJLoader, "./light.obj");
-  const centerRef = useRef();
-  // const grassTexture = useLoader(TextureLoader, "./grass.jpg");
-  // const grass = useLoader(OBJLoader, "./grass.obj");
-  // const tv = useLoader(GLTFLoader, "./tvunit.glb");
-  // const bed2 = useLoader(OBJLoader, "./bed2.obj");
-  // const roughness = useLoader(TextureLoader, darkWoodRoughness.src);
-  const map = useLoader(TextureLoader, darkWood.src);
-  // const wood = useLoader(TextureLoader, "./Wood-Dark.jpg");
-  // const t1 = useLoader(TextureLoader, "./Ecostil3.jpg");
-  // const t2 = useLoader(TextureLoader, "./Grand560.jpg");
-  // const t3 = useLoader(TextureLoader, "./01.jpg");
-  // const carpetmap = useLoader(TextureLoader, "./carpettexture.jpg");
-  const [matCaptexture] = useMatcapTexture("686B73_2A2B2D_D5D9DD_B0B3BC", 256);
-  const ringref = useRef();
-  const light = useRef();
-  const meshRef = useRef();
-  const font = new FontLoader().parse(marker);
-  // console.log(bed2);
+  const { camera, scene, gl, size } = useThree();
+  const usePostprocess = true;
+  const clearColor = "#010101";
+  const instance = new THREE.WebGLRenderer({
+    alpha: false,
+    antialias: true,
+  });
+  instance.setClearColor(clearColor, 1);
+  instance.setSize(window.innerWidth, window.innerHeight);
+  instance.setPixelRatio(Math.min(Math.max(window.devicePixelRatio, 1), 2));
+  const RenderTargetClass =
+    gl.getPixelRatio() <= 2
+      ? THREE.WebGLRenderTarget
+      : THREE.WebGLMultisampleRenderTarget;
+  console.log(gl);
+  const renderTarget = new RenderTargetClass(
+    window.innerWidth,
+    window.innerHeight,
+    {
+      generateMipmaps: false,
+      minFilter: THREE.LinearFilter,
+      magFilter: THREE.LinearFilter,
+      format: THREE.RGBAFormat,
+      encoding: THREE.sRGBEncoding,
+    }
+  );
+  const unrealBloomPass = new UnrealBloomPass(
+    new THREE.Vector2(window.innerWidth, window.innerHeight),
+    0.8,
+    0.315,
+    0
+  );
+  unrealBloomPass.enabled = true;
+  unrealBloomPass.bloomTintColors.value = "#7f00ff";
+  unrealBloomPass.bloomTintColors.instance = new THREE.Color(
+    unrealBloomPass.bloomTintColors.value
+  );
+  unrealBloomPass.compositeMaterial.uniforms.uTintStrength = { value: 0.15 };
+  unrealBloomPass.compositeMaterial.fragmentShader = `
+varying vec2 vUv;
+uniform sampler2D blurTexture1;
+uniform sampler2D blurTexture2;
+uniform sampler2D blurTexture3;
+uniform sampler2D blurTexture4;
+uniform sampler2D blurTexture5;
+uniform sampler2D dirtTexture;
+uniform float bloomStrength;
+uniform float bloomRadius;
+uniform float bloomFactors[NUM_MIPS];
+uniform vec3 bloomTintColors[NUM_MIPS];
+uniform vec3 uTintColor;
+uniform float uTintStrength;
 
-  // grass.children[0].material.map = grassTexture;
-  // grass.children[0].receiveShadow = false;
-  // useHelper(light, THREE.SpotLightHelper);
-  light?.current?.target.position.set(-0.5, 0, 0);
-  // for (let i = 0; i < obj.children.length; i++) {
-  //   obj.children[i].material.color.r = Math.random() * 1;
-  //   obj.children[i].material.color.g = Math.random() * 1;
-  //   obj.children[i].material.color.b = Math.random() * 1;
-  //   obj.children[i].castShadow = true;
-  //   obj.children[i].receiveShadow = true;
-  //   // lamp.children[i].material.map = map;
-  // }
-  // for (let i = 0; i < stair.children.length; i++) {
-  //   stair.children[i].castShadow = true;
-  //   // stair.children[i].material.toneMapped = false;
-  //   stair.children[i].material.shininess = 100;
-  //   stair.children[i].material.map = map;
-  // }
-  // for (let i = 0; i < bed2.children.length; i++) {
-  //   bed2.children[i].castShadow = true;
-  //   bed2.children[i].receiveShadow = true;
-  //   // stair.children[i].material.toneMapped = false;
-  //   bed2.children[i].material.map = t1;
-  // }
-  // bed2.children[3].material.map = t2;
-  // bed2.children[0].material.map = t3;
-  // for (let i = 0; i < lamp.children.length; i++) {
-  //   // stair.children[i].castShadow = true;
-  //   // lamp.children[i].material.color = "black";
-  //   // lamp.children[i].material.toneMapped = false;
-  //   lamp.children[i].material.color = [0, 0, 0];
-  // }
-  // for (let i = 0; i < bed.children.length; i++) {
-  //   bed.children[i].castShadow = true;
-  //   bed.children[i].receive = true;
-  // }
+float lerpBloomFactor(const in float factor) {
+    float mirrorFactor = 1.2 - factor;
+    return mix(factor, mirrorFactor, bloomRadius);
+}
 
-  // stair.traverse(function (child) {
-  //   if (child.isMesh) {
-  //     child.castShadow = true;
-  //     child.receiveShadow = true;
-  //   }
-  // });
+void main() {
+    vec4 color = bloomStrength * ( lerpBloomFactor(bloomFactors[0]) * vec4(bloomTintColors[0], 1.0) * texture2D(blurTexture1, vUv) +
+        lerpBloomFactor(bloomFactors[1]) * vec4(bloomTintColors[1], 1.0) * texture2D(blurTexture2, vUv) +
+        lerpBloomFactor(bloomFactors[2]) * vec4(bloomTintColors[2], 1.0) * texture2D(blurTexture3, vUv) +
+        lerpBloomFactor(bloomFactors[3]) * vec4(bloomTintColors[3], 1.0) * texture2D(blurTexture4, vUv) +
+        lerpBloomFactor(bloomFactors[4]) * vec4(bloomTintColors[4], 1.0) * texture2D(blurTexture5, vUv) );
+
+    color.rgb = mix(color.rgb, uTintColor, uTintStrength);
+    gl_FragColor = color;
+}
+        `;
+  const composer = new EffectComposer(instance, renderTarget);
+  const renderPass = new RenderPass(scene, camera.instance);
+  composer.setPixelRatio(Math.min(Math.max(window.devicePixelRatio, 1), 2));
+  composer.setSize(size.width, size.height);
+  composer.addPass(renderPass);
+  composer.addPass(unrealBloomPass);
+
+  const sphereRef = useRef();
+  const colorA = "#ff3e00";
+  const intensityA = 1.85;
+  const sphericalA = new THREE.Spherical(1, 0.615, 2.049);
+  const lightA = new THREE.Color(colorA);
+  const colorB = "#0063ff";
+  const intensityB = 1.4;
+  const sphericalB = new THREE.Spherical(1, 2.561, -1.844);
+  const lightB = new THREE.Color(colorB);
+  useEffect(() => {
+    sphereRef.current.material.uniforms.uLightAPosition.value.setFromSpherical(
+      sphericalA
+    );
+    sphereRef.current.material.uniforms.uLightBPosition.value.setFromSpherical(
+      sphericalB
+    );
+    sphereRef.current.geometry.computeTangents();
+    console.log(sphereRef);
+  }, [sphereRef]);
+  composer.renderer.setClearColor();
+  composer.renderer.render(scene, camera);
+  console.log(composer);
+  // sphereRef.current.material.wireframe = true;
+
+  // if (postProcess) {
+  //   postProcess.composer.render();
+  // }
 
   useFrame((state, delta) => {
-    // meshRef.current.rotation.x += 0.01;
-    // state.camera.position.set(centerRef.current.position);
+    // console.log(state);
+    // composer.renderer.render();
+    sphereRef.current.material.uniforms.uDisplacementStrength.value = 0.2;
+    sphereRef.current.material.uniforms.uDistortionStrength.value = 0.5;
+    sphereRef.current.material.uniforms.uFresnelMultiplier.value = 2.75;
+    sphereRef.current.material.uniforms.uTime.value += 0.0075;
+    sphereRef.current.material.uniforms.uLightAPosition.value.setFromSpherical(
+      sphericalA
+    );
+    sphereRef.current.material.uniforms.uLightBPosition.value.setFromSpherical(
+      sphericalB
+    );
   });
+
   return (
     <>
-      <ambientLight args={[0xffffff, 0.1]} />
-      <EffectComposer>
-        <Bloom mipmapBlur />
-      </EffectComposer>
-      {/* <BakeShadows /> */}
-      <group position={[0, -1.5, 0]}>
-        <group position={[0, 0, 0]}>
-          <group position={[0, 1.47, 0]}>
-            <spotLight
-              args={[0xffffff, 0.2, 100, 100]}
-              position={[2.43, 2.8, -0.05]}
-              rotation={[0, 0, 0]}
-              // target={{ position: [1, 0, 0] }}
-              ref={light}
-              castShadow
-              shadow-mapSize={[1024 * 2, 1024 * 2]}
-            />
-            <mesh
-              castShadow={true}
-              rotation={[Math.PI / 2, Math.PI / -5, 0]}
-              position={[2.45, 2.825, -0.05]}
-              scale={[0.0004, 0.0004, 0.0004]}
-            >
-              <circleGeometry args={[100, 100]} castShadow={true} />
-              <meshStandardMaterial
-                color="white"
-                emissive={"white"}
-                emissiveIntensity={10}
-                toneMapped={false}
-              />
-            </mesh>
-            <Clone
-              object={lamp}
-              scale={[0.01, 0.01, 0.01]}
-              rotation={[0, Math.PI / -2, 0]}
-              position={[2.45, 2.8, 0]}
-            />
-          </group>
-          <group position={[0, 1.47, 2]} rotation={[0, -2, 0]}>
-            <spotLight
-              args={[0xffffff, 0.2, 100, 100]}
-              position={[2.43, 2.8, -0.05]}
-              rotation={[0, 0, 0]}
-              // target={{ position: [1, 0, 0] }}
-              ref={light}
-              castShadow
-              shadow-mapSize={[1024 * 2, 1024 * 2]}
-            />
-            <mesh
-              castShadow={true}
-              rotation={[Math.PI / 2, Math.PI / -5, 0]}
-              position={[2.45, 2.825, -0.05]}
-              scale={[0.0004, 0.0004, 0.0004]}
-            >
-              <circleGeometry args={[100, 100]} castShadow={true} />
-              <meshStandardMaterial
-                color="white"
-                emissive={"white"}
-                emissiveIntensity={10}
-                toneMapped={false}
-              />
-            </mesh>
-            <Clone
-              object={lamp}
-              scale={[0.01, 0.01, 0.01]}
-              rotation={[0, Math.PI / -2, 0]}
-              position={[2.45, 2.8, 0]}
-            />
-          </group>
-          <group position={[0, 1.47, -2]} rotation={[0, 2, 0]}>
-            <spotLight
-              args={[0xffffff, 0.2, 100, 100]}
-              position={[2.43, 2.8, -0.05]}
-              rotation={[0, 0, 0]}
-              // target={{ position: [1, 0, 0] }}
-              ref={light}
-              castShadow
-              shadow-mapSize={[1024 * 2, 1024 * 2]}
-            />
-            <mesh
-              castShadow={true}
-              rotation={[Math.PI / 2, Math.PI / -5, 0]}
-              position={[2.45, 2.825, -0.05]}
-              scale={[0.0004, 0.0004, 0.0004]}
-            >
-              <circleGeometry args={[100, 100]} castShadow={true} />
-              <meshStandardMaterial
-                color="white"
-                emissive={"white"}
-                emissiveIntensity={10}
-                toneMapped={false}
-              />
-            </mesh>
-            <Clone
-              object={lamp}
-              scale={[0.01, 0.01, 0.01]}
-              rotation={[0, Math.PI / -2, 0]}
-              position={[2.45, 2.8, 0]}
-            />
-          </group>
-          <group position={[0, 1.47, -1.5]} rotation={[0, 0.5, 0]}>
-            <spotLight
-              args={[0xffffff, 0.2, 100, 100]}
-              position={[2.43, 2.8, -0.05]}
-              rotation={[0, 0, 0]}
-              // target={{ position: [1, 0, 0] }}
-              ref={light}
-              castShadow
-              shadow-mapSize={[1024 * 2, 1024 * 2]}
-            />
-            <mesh
-              castShadow={true}
-              rotation={[Math.PI / 2, Math.PI / -5, 0]}
-              position={[2.45, 2.825, -0.05]}
-              scale={[0.0004, 0.0004, 0.0004]}
-            >
-              <circleGeometry args={[100, 100]} castShadow={true} />
-              <meshStandardMaterial
-                color="white"
-                emissive={"white"}
-                emissiveIntensity={10}
-                toneMapped={false}
-              />
-            </mesh>
-            <Clone
-              object={lamp}
-              scale={[0.01, 0.01, 0.01]}
-              rotation={[0, Math.PI / -2, 0]}
-              position={[2.45, 2.8, 0]}
-            />
-          </group>
-          <group position={[0, 1.47, 1.5]} rotation={[0, -0.5, 0]}>
-            <spotLight
-              args={[0xffffff, 0.2, 100, 100]}
-              position={[2.43, 2.8, -0.05]}
-              rotation={[0, 0, 0]}
-              // target={{ position: [1, 0, 0] }}
-              ref={light}
-              castShadow
-              shadow-mapSize={[1024 * 2, 1024 * 2]}
-            />
-            <mesh
-              castShadow={true}
-              rotation={[Math.PI / 2, Math.PI / -5, 0]}
-              position={[2.45, 2.825, -0.05]}
-              scale={[0.0004, 0.0004, 0.0004]}
-            >
-              <circleGeometry args={[100, 100]} castShadow={true} />
-              <meshStandardMaterial
-                color="white"
-                emissive={"white"}
-                emissiveIntensity={10}
-                toneMapped={false}
-              />
-            </mesh>
-            <Clone
-              object={lamp}
-              scale={[0.01, 0.01, 0.01]}
-              rotation={[0, Math.PI / -2, 0]}
-              position={[2.45, 2.8, 0]}
-            />
-          </group>
-          <group position={[0, 1.47, 1.5]} rotation={[0, -3, 0]}>
-            <spotLight
-              args={[0xffffff, 0.2, 100, 100]}
-              position={[2.43, 2.8, -0.05]}
-              rotation={[0, 0, 0]}
-              // target={{ position: [1, 0, 0] }}
-              ref={light}
-              castShadow
-              shadow-mapSize={[1024 * 2, 1024 * 2]}
-            />
-            <mesh
-              castShadow={true}
-              rotation={[Math.PI / 2, Math.PI / -5, 0]}
-              position={[2.45, 2.825, -0.05]}
-              scale={[0.0004, 0.0004, 0.0004]}
-            >
-              <circleGeometry args={[100, 100]} castShadow={true} />
-              <meshStandardMaterial
-                color="white"
-                emissive={"white"}
-                emissiveIntensity={10}
-                toneMapped={false}
-              />
-            </mesh>
-            <Clone
-              object={lamp}
-              scale={[0.01, 0.01, 0.01]}
-              rotation={[0, Math.PI / -2, 0]}
-              position={[2.45, 2.8, 0]}
-            />
-          </group>
-          <group position={[0, 1.47, -2]} rotation={[0, 2.8, 0]}>
-            <spotLight
-              args={[0xffffff, 0.2, 100, 100]}
-              position={[2.43, 2.8, -0.05]}
-              rotation={[0, 0, 0]}
-              // target={{ position: [1, 0, 0] }}
-              ref={light}
-              castShadow
-              shadow-mapSize={[1024 * 2, 1024 * 2]}
-            />
-            <mesh
-              castShadow={true}
-              rotation={[Math.PI / 2, Math.PI / -5, 0]}
-              position={[2.45, 2.825, -0.05]}
-              scale={[0.0004, 0.0004, 0.0004]}
-            >
-              <circleGeometry args={[100, 100]} castShadow={true} />
-              <meshStandardMaterial
-                color="white"
-                emissive={"white"}
-                emissiveIntensity={10}
-                toneMapped={false}
-              />
-            </mesh>
-            <Clone
-              object={lamp}
-              scale={[0.01, 0.01, 0.01]}
-              rotation={[0, Math.PI / -2, 0]}
-              position={[2.45, 2.8, 0]}
-            />
-          </group>
-          <group position={[0, 1.47, 0]} rotation={[0, 2.8, 0]}>
-            <spotLight
-              args={[0xffffff, 0.2, 100, 100]}
-              position={[2.43, 2.8, -0.05]}
-              rotation={[0, 0, 0]}
-              // target={{ position: [1, 0, 0] }}
-              ref={light}
-              castShadow
-              shadow-mapSize={[1024 * 2, 1024 * 2]}
-            />
-            <mesh
-              castShadow={true}
-              rotation={[Math.PI / 2, Math.PI / -5, 0]}
-              position={[2.45, 2.825, -0.05]}
-              scale={[0.0004, 0.0004, 0.0004]}
-            >
-              <circleGeometry args={[100, 100]} castShadow={true} />
-              <meshStandardMaterial
-                color="white"
-                emissive={"white"}
-                emissiveIntensity={10}
-                toneMapped={false}
-              />
-            </mesh>
-            <Clone
-              object={lamp}
-              scale={[0.01, 0.01, 0.01]}
-              rotation={[0, Math.PI / -2, 0]}
-              position={[2.45, 2.8, 0]}
-            />
-          </group>
-          <mesh position={[0, 4.55, 0]} receiveShadow castShadow>
-            <boxGeometry args={[10, 0.1, 10]} />
-            <meshStandardMaterial map={map} metalness={0} roughness={4} />
-          </mesh>
-          <Physics>
-            <RigidBody position={[0, 1, 0]}>
-              {/* <Float
-                speed={3} // Animation speed, defaults to 1
-                rotationIntensity={0.3} // XYZ rotation intensity, defaults to 1
-                floatIntensity={1} // Up/down float intensity, works like a multiplier with floatingRange,defaults to 1
-                floatingRange={[0, 1]}
-              > */}
-              <Center
-                position={[0, 0, 0]}
-                scale={[0.7, 0.7, 0.7]}
-                ref={centerRef}
-              >
-                <Text3D
-                  // map={matCap}
-                  font={marker}
-                  castShadow
-                  receiveShadow
-                  rotation={[0, Math.PI / 2, 0]}
-                  curveSegments={12}
-                  bevelEnabled
-                  bevelThickness={0.02}
-                  bevelSize={0.02}
-                  bevelOffset={0}
-                  bevelSegments={5}
-                >
-                  Sahil E Arwand
-                  <meshMatcapMaterial matcap={matCaptexture} />
-                </Text3D>
-              </Center>
-              {/* </Float> */}
-            </RigidBody>
-            <RigidBody type="fixed">
-              <RightWall />
-            </RigidBody>
-          </Physics>
-          <mesh position={[0, 4.55, 0]} receiveShadow castShadow>
-            <boxGeometry args={[10, 0.1, 10]} />
-            <meshMatcapMaterial matcap={matCaptexture} />
-
-            {/* <meshStandardMaterial map={map} metalness={0} roughness={4} /> */}
-          </mesh>
-        </group>
-
-        {/* <group position={[0, 1.47, 2]} rotation={[0, -2.4, 0]}>
-          <spotLight
-            args={[0xffffff, 0.2, 500]}
-            position={[2.45, 2, 0]}
-            rotation={[1, 1, 1]}
-            ref={light}
-            castShadow
-            shadow-mapSize={[1024 * 2, 1024 * 2]}
-          />
-          <mesh
-            castShadow={true}
-            rotation={[Math.PI / 2.2, Math.PI / -3.3, 0]}
-            position={[2.39, 2.78, -0.05]}
-            scale={[0.0004, 0.0004, 0.0004]}
-          >
-            <circleGeometry args={[100, 100]} castShadow={true} />
-            <meshStandardMaterial
-              color="white"
-              emissive={"white"}
-              // color="blue"
-              // emissive={"blue"}
-              emissiveIntensity={10}
-              toneMapped={false}
-            />
-          </mesh>
-          <Clone
-            object={lamp}
-            scale={[0.01, 0.01, 0.01]}
-            rotation={[0, Math.PI / -2, 0.05]}
-            position={[2.45, 3, 0]}
-          />
-        </group>
-        <group position={[0, 1.47, -2]} rotation={[0, 2, 0]}>
-          <spotLight
-            // args={[0x00ff01, 2, 500]}
-            args={[0xffffff, 0.2, 500]}
-            position={[2.45, 2, 0]}
-            rotation={[1, 1, 1]}
-            ref={light}
-            castShadow
-            shadow-mapSize={[1024 * 2, 1024 * 2]}
-          />
-          <mesh
-            castShadow={true}
-            rotation={[Math.PI / 2.2, Math.PI / -3.3, 0]}
-            position={[2.39, 2.78, -0.05]}
-            scale={[0.0004, 0.0004, 0.0004]}
-          >
-            <circleGeometry args={[100, 100]} castShadow={true} />
-            <meshStandardMaterial
-              color="white"
-              emissive={"white"}
-              // color="green"
-              // emissive={"green"}
-              emissiveIntensity={10}
-              toneMapped={false}
-            />
-          </mesh>
-          <Clone
-            object={lamp}
-            scale={[0.01, 0.01, 0.01]}
-            rotation={[0, Math.PI / -2, 0.05]}
-            position={[2.45, 3, 0]}
-          />
-        </group>
-        <group position={[0, 1.47, -1.5]} rotation={[0, 0.5, 0]}>
-          <spotLight
-            args={[0xffffff, 0.2, 500]}
-            position={[2.45, 2, 0]}
-            rotation={[1, 1, 1]}
-            ref={light}
-            castShadow
-            shadow-mapSize={[1024 * 2, 1024 * 2]}
-          />
-          <mesh
-            castShadow={true}
-            rotation={[Math.PI / 2.2, Math.PI / -3.3, 0]}
-            position={[2.39, 2.78, -0.05]}
-            scale={[0.0004, 0.0004, 0.0004]}
-          >
-            <circleGeometry args={[100, 100]} castShadow={true} />
-            <meshStandardMaterial
-              color="white"
-              emissive={"white"}
-              emissiveIntensity={10}
-              toneMapped={false}
-            />
-          </mesh>
-          <Clone
-            object={lamp}
-            scale={[0.01, 0.01, 0.01]}
-            rotation={[0, Math.PI / -2, 0.05]}
-            position={[2.45, 3, 0]}
-          />
-        </group>
-        <group position={[0, 1.47, 1.5]} rotation={[0, -0.5, 0]}>
-          <spotLight
-            args={[0xffffff, 0.2, 500]}
-            position={[2.45, 2, 0]}
-            rotation={[1, 1, 1]}
-            ref={light}
-            castShadow
-            shadow-mapSize={[1024 * 2, 1024 * 2]}
-          />
-          <mesh
-            castShadow={true}
-            rotation={[Math.PI / 2.2, Math.PI / -3.3, 0]}
-            position={[2.39, 2.78, -0.05]}
-            scale={[0.0004, 0.0004, 0.0004]}
-          >
-            <circleGeometry args={[100, 100]} castShadow={true} />
-            <meshStandardMaterial
-              color="white"
-              emissive={"white"}
-              emissiveIntensity={10}
-              toneMapped={false}
-            />
-          </mesh>
-          <Clone
-            object={lamp}
-            scale={[0.01, 0.01, 0.01]}
-            rotation={[0, Math.PI / -2, 0.05]}
-            position={[2.45, 3, 0]}
-          />
-        </group> */}
-        {/* <Text3D toneMapped={false}>Sahil E Arwand</Text3D> */}
-        {/* <mesh
-          // ref={ringref}
-          rotation={[Math.PI / 2, 0, Math.PI / 4]}
-          position={[-4.1, 4.5, -3.88]}
-          castShadow
-          receiveShadow
-        >
-          <planeGeometry args={[20, 20]} />
-          <meshStandardMaterial map={map} side={THREE.DoubleSide} />
-        </mesh> */}
-
-        {/* <AccumulativeShadows>
-        <directionalLight
-          args={[0xffffff, 2, 500]}
-          position={[4, 5, 0]}
-          rotation={[1, 1, 1]}
-          castShadow
-          shadow-mapSize={[1024, 1024]}
-        />
-      </AccumulativeShadows> */}
-        {/* <mesh receiveShadow rotation={[0, 0, 0]} position={[0, 0.5, 0]}>
-        <boxGeometry args={[5, 0, 10]} />
-        <meshStandardMaterial color="greenyellow" />
-        <shadowMaterial opacity={1} />
-      </mesh> */}
-
-        {/* <mesh
-        ref={meshRef}
-        castShadow={true}
-        receiveShadow
-        rotation={[0, 0, 0]}
-        position={[0, 1.5, 2]}
-      >
-        <boxGeometry args={[1, 1, 1]} castShadow={true} />
-        <meshBasicMaterial color={"white"} />
-      </mesh> */}
-
-        <OrbitControls />
-        {/* <ContactShadows rotation={[0, 0, 0]} position-y={0} opacity={0.5} /> */}
-        {/* <Floor /> */}
-        <LeftWall />
-        {/* <RightWall /> */}
-        {/* <Roof /> */}
-        {/* <primitive
-          object={obj}
-          castShadow={true}
-          scale={[1, 1, 1]}
-          rotation={[0, Math.PI / -2, 0]}
-          position={[4.85, Math.PI / 7, 2]}
-        />
-
-        <Clone
-          object={stair}
-          castShadow
-          receiveShadow
-          // scale={[1, 1, 1]}
-          rotation={[0, Math.PI / 1.7, 0]}
-          position={[-3.5, Math.PI / 6, -3.5]}
-        />
-        <Clone
-          object={stair}
-          castShadow
-          receiveShadow
-          // scale={[1, 1, 1]}
-          rotation={[0, Math.PI / -3, 0]}
-          position={[-3.5, 4.5, -3.5]}
-        />
-
-        <primitive
-          object={bed2}
-          scale={[0.001, 0.001, 0.001]}
-          rotation={[0, Math.PI / 2, 0]}
-          position={[-3.7, 0.5, 0]}
-        />
-        <primitive
-          object={grass}
-          scale={[1, 1, 1]}
-          rotation={[Math.PI / -2, 0, 0]}
-          position={[-4.9, -8, 0]}
-        />
-        <primitive
-          object={tv.scene}
-          scale={[0.1, 0.1, 0.1]}
-          rotation={[0, 0, 0]}
-          position={[2, 0.65, 4.51]}
+      <pointLight />
+      <OrbitControls />
+      {/* <EffectComposer>
+        <Bloom />
+      </EffectComposer> */}
+      <mesh ref={sphereRef}>
+        <sphereGeometry args={[1, 512, 512]} />
+        {/* <meshBasicMaterial
+          color={"blue"}
+          wireframe={true}
+          wireframeLinecap="butt"
+          wireframeLinejoin="round"
+          wireframeLinewidth={1}
         /> */}
+        <shaderMaterial
+          uniforms={{
+            uLightAColor: { value: lightA },
+            uLightAPosition: { value: new THREE.Vector3(1, 1, 0) },
+            uLightAIntensity: { value: intensityA },
+            uLightBColor: { value: lightB },
+            uLightBPosition: { value: new THREE.Vector3(-1, -1, 0) },
+            uLightBIntensity: { value: intensityB },
 
-        {/* <mesh
-          rotation={[Math.PI / 2, 0, 0]}
-          position={[-3, 0.5, 0.2]}
-          scale={[5, 5, 5]}
-          receiveShadow
-          castShadow
-        >
-          <planeGeometry />
-          <meshStandardMaterial map={carpetmap} side={THREE.DoubleSide} />
-        </mesh> */}
+            uSubdivision: {
+              value: new THREE.Vector2(512, 512),
+            },
 
-        {/* <mesh rotation={[0, 0, Math.PI / 2]} position={[5, 5.5, 0]}>
-          <boxGeometry args={[10, 0.1, 10]} />
-          <meshPhysicalMaterial
-            // color={"#363636"}
-            metalness={0}
-            // map={map}
-            // roughnessMap={roughness}
-            roughness={0}
-            transmission={0.9}
-          />
-        </mesh> */}
-        <mesh
-          receiveShadow
-          rotation={[Math.PI / 2, 0, 0]}
-          position={[0, 5.5, -5]}
-        >
-          <boxGeometry args={[10, 0.1, 10]} />
-          <meshStandardMaterial
-            color={"#363636"}
-            metalness={0}
-            // map={map}
-            // roughnessMap={roughness}
-            roughness={1}
-          />
-        </mesh>
-        <mesh
-          receiveShadow
-          rotation={[Math.PI / 2, 0, 0]}
-          position={[0, 5.5, 5]}
-        >
-          <boxGeometry args={[10, 0.1, 10]} />
-          <meshStandardMaterial
-            color={"#363636"}
-            metalness={0}
-            // map={map}
-            // roughnessMap={roughness}
-            roughness={1}
-          />
-        </mesh>
-        {/* <mesh
-        castShadow
-        rotation={[Math.PI / 2, Math.PI / 2, 0]}
-        position={[4.94, 4.47, 0]}
-        scale={[0.1, 0.1, 0.1]}
-      >
-        <planeGeometry args={[0.1, 100]} castShadow={true} />
-        <meshStandardMaterial
-          side={THREE.DoubleSide}
-          color="blue"
-          emissive={"blue"}
-          emissiveIntensity={40}
-          toneMapped={false}
+            uOffset: { value: new THREE.Vector3() },
+
+            uDistortionFrequency: { value: 1.5 },
+            uDistortionStrength: { value: 0.65 },
+            uDisplacementFrequency: { value: 2.12 },
+            uDisplacementStrength: { value: 0.152 },
+
+            uFresnelOffset: { value: -1.609 },
+            uFresnelMultiplier: { value: 3.587 },
+            uFresnelPower: { value: 1.793 },
+
+            uTime: { value: 0 },
+          }}
+          defines={{ USE_TANGENT: "" }}
+          vertexShader={vertexShader}
+          fragmentShader={fragmentShader}
         />
-      </mesh> */}
-      </group>
+      </mesh>
     </>
   );
 }

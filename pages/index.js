@@ -39,7 +39,7 @@ export default function Home() {
               //   camera.position.set(0, 20, -1);
               // }}
             >
-              <Test2 />
+              <Test />
             </Canvas>
           </div>
         </div>
