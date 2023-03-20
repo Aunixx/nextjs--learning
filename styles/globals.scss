@@ -1,23 +1,23 @@
+@font-face {
+  font-family: "Aileron";
+  src: url("./Ailerons-Typeface.otf");
+}
 body {
   margin: 0;
   padding: 0;
   height: 100vh;
   width: 100%;
   background-color: black;
+  position: relative;
+  font-family: "Aileron";
+  overflow-x: hidden;
 }
 canvas {
   height: 100vh !important;
-  // position: fixed;
-  // top: 0;
-  // left: 0;
-  // bottom: 0;
-  // right: 0;
-  // min-width: 100%;
-  // min-height: 100%;
 }
 
 .screen {
-  background: linear-gradient(185deg, #132239 24.56%, #fa0339 176.52%);
+  background: linear-gradient(185deg, #4169e1 24.56%, #fa0339 176.52%);
   color: white;
   width: 2900px;
   height: 1650px;
@@ -28,4 +28,47 @@ canvas {
   h1 {
     font-size: 200px;
   }
+}
+
+.container {
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.text {
+  font-weight: 100;
+  font-size: clamp(2rem, -0.8169rem + 12.0188vw, 10rem);
+  color: #fafafa;
+  display: flex;
+}
+.exploreBtn {
+  display: none;
+  padding: 12px 18px;
+  border: 1px solid white;
+  border-radius: 8px;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  font-family: "Aileron";
+  font-size: 23px;
+  font-weight: 400;
+  width: max-content;
+  background-color: transparent;
+}
+.endtext {
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  .exploreBtn {
+    display: block;
+  }
+}
+
+.dud {
+  color: #757575;
 }

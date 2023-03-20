@@ -7,6 +7,7 @@ import Test from "@/components/test";
 import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Test2 from "@/components/test2";
 import { useScroll } from "@react-hooks-library/core";
+import ScrambleText from "@/components/ScrambleText/ScrambleText";
 // import { useScroll, animated } from "@react-spring/web";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -35,12 +36,14 @@ export default function Home() {
           <div className={styles.canvasWrapper}>
             <Canvas
               shadows={true}
+              color="#4169e1"
               // onCreated={({ camera }) => {
               //   camera.position.set(0, 20, -1);
               // }}
             >
               <Test />
             </Canvas>
+            <ScrambleText />
           </div>
         </div>
       </Suspense>
