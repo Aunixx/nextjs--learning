@@ -61,10 +61,10 @@ export default function ScrambleText({ children }) {
   // ——————————————————————————————————————————————————
 
   const phrases = [
-    // "I believe in",
-    // "setting milestones",
-    // "than",
-    // "setting goals",
+    "I believe in",
+    "setting milestones",
+    "than",
+    "setting goals",
     "SAHIL E ARWAND",
     // "",
   ];
