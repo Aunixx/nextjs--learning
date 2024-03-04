@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import styles from "./ScrambleText.module.scss";
 
-export default function ScrambleText({ children }) {
+export default function ScrambleText() {
   class TextScramble {
     constructor(el) {
       this.el = el;
@@ -111,7 +111,7 @@ export default function ScrambleText({ children }) {
             that provides innovative and customized solutions for various
             clients and industries. With four years of experience in web
             development, I create and maintain responsive and user-friendly web
-            applications that meet the client's requirements and expectations.{" "}
+            applications that meet the clients requirements and expectations.
             <br /> <br /> I use my skills in React, HTML, CSS, Bootstrap,
             Tailwind CSS, Javascript, and Typescript to develop engaging and
             interactive web pages that are compatible across different platforms
@@ -121,7 +121,7 @@ export default function ScrambleText({ children }) {
             a metaverse project using Three.js and React Three Fiber, which was
             a challenging and rewarding experience. I have a BS in Computer
             Science from GCU, where I acquired a solid foundation in
-            programming, data structures, algorithms, and software engineering.{" "}
+            programming, data structures, algorithms, and software engineering.
             <br />
             <br /> I am passionate about learning and exploring new technologies
             and trends in the information technology field, and I have completed
@@ -135,6 +135,7 @@ export default function ScrambleText({ children }) {
           <div className="cards-wrapper">
             {[1, 2, 3, 4, 5, 6].map((item, index) => (
               <div
+                key={item}
                 className={`card ${
                   index > 2 ? "row-two" : index > 4 ? "row-three" : ""
                 } `}
@@ -149,7 +150,7 @@ export default function ScrambleText({ children }) {
             that provides innovative and customized solutions for various
             clients and industries. With four years of experience in web
             development, I create and maintain responsive and user-friendly web
-            applications that meet the client's requirements and expectations.{" "}
+            applications that meet the clients requirements and expectations.
             <br /> <br /> I use my skills in React, HTML, CSS, Bootstrap,
             Tailwind CSS, Javascript, and Typescript to develop engaging and
             interactive web pages that are compatible across different platforms
@@ -159,7 +160,7 @@ export default function ScrambleText({ children }) {
             a metaverse project using Three.js and React Three Fiber, which was
             a challenging and rewarding experience. I have a BS in Computer
             Science from GCU, where I acquired a solid foundation in
-            programming, data structures, algorithms, and software engineering.{" "}
+            programming, data structures, algorithms, and software engineering.
             <br />
             <br /> I am passionate about learning and exploring new technologies
             and trends in the information technology field, and I have completed
@@ -173,6 +174,7 @@ export default function ScrambleText({ children }) {
           <div className="cards-wrapper">
             {[1, 2, 3, 4, 5, 6].map((item, index) => (
               <div
+                key={item}
                 className={`card ${
                   index > 2 ? "row-two" : index > 4 ? "row-three" : ""
                 } `}
