@@ -63,7 +63,8 @@ extend({ TextGeometry });
 // extend({ UnrealBloomPass });
 extend({ RenderPass, UnrealBloomPass });
 
-export default function Test() {
+export default function Test({ cameraPosition }) {
+  const [uTimeValue, setUTimeValue] = useState(0);
   const { camera, scene, gl, size } = useThree();
   const usePostprocess = true;
   const clearColor = "#4169e1";
@@ -76,7 +77,6 @@ export default function Test() {
   instance.setPixelRatio(Math.min(Math.max(window.devicePixelRatio, 1), 2));
 
   const effectRef = useRef();
-  // effectRef.current.enabled = true;
   useEffect(() => {
     effectRef.current.radius = 0.3;
     effectRef.current.resolution.x = size.width;
@@ -120,16 +120,7 @@ export default function Test() {
     }
             `;
   }, [effectRef]);
-  //   const composer = new EffectComposer(instance, renderTarget);
-  //   const renderPass = new RenderPass(scene, camera.instance);
-  //   composer.setPixelRatio(Math.min(Math.max(window.devicePixelRatio, 1), 2));
-  //   composer.setSize(size.width, size.height);
-  //   composer.addPass(renderPass);
-  //   composer.addPass(unrealBloomPass);
-  // if (effectRef) {
-  //   effectRef.addPass(unrealBloomPass);
-  // }
-  //
+
   const sphereRef = useRef();
 
   const colorA = "#89ABE3";
@@ -140,6 +131,7 @@ export default function Test() {
   const intensityB = 1.4;
   const sphericalB = new THREE.Spherical(1, 0.615, 2.049);
   const lightB = new THREE.Color(colorB);
+
   useEffect(() => {
     sphereRef.current.material.uniforms.uLightAPosition.value.setFromSpherical(
       sphericalA
@@ -148,51 +140,109 @@ export default function Test() {
       sphericalB
     );
     sphereRef.current.geometry.computeTangents();
-    console.log(effectRef);
   }, [sphereRef]);
-  //   composer.renderer.setClearColor();
-  //   composer.renderer.render(scene, camera);
-  //   console.log(composer);
-  // sphereRef.current.material.wireframe = true;
 
-  // if (postProcess) {
-  //   postProcess.composer.render();
-  // }
-  console.log(camera.position);
-  camera.position.z = 1.75;
+  // useEffect(() => {
+  //   console.log(sphereRef.current);
+  //   console.log(sphereRef.current.__r3f.objects[1]?.uniforms.uTime.value);
+  //   setUTimeValue(sphereRef.current.material.uniforms.uTime.value);
+  //   gsap.to(camera.position, { z: cameraPosition });
+  // }, [cameraPosition]);
+  if (window.innerWidth < 768) {
+    gsap.to(camera.position, { z: 2.5 });
+  } else {
+    gsap.to(camera.position, { z: 1.75 });
+  }
+  useEffect(() => {
+    const btnWrapper = document.querySelector(".btnWrapper");
+    const container = document.querySelector(".container");
+    const about = document.querySelector(".about-section");
+    const work = document.querySelector(".work-section");
+    const sectionWrapper = document.querySelector(".section-wrapper");
+    const main = document.querySelector(".main");
+
+    btnWrapper.addEventListener("mouseover", (e) => {
+      const btn = e.target.closest("button");
+      if (btn) {
+        if (btn.classList.contains("aboutBtn")) {
+          sectionWrapper.classList.remove("work");
+          sectionWrapper.classList.remove("contact");
+          sectionWrapper.classList.add("about");
+        } else if (btn.classList.contains("workBtn")) {
+          sectionWrapper.classList.remove("about");
+          sectionWrapper.classList.remove("contact");
+          sectionWrapper.classList.add("work");
+        } else {
+          sectionWrapper.classList.remove("about");
+          sectionWrapper.classList.remove("work");
+          sectionWrapper.classList.add("contact");
+        }
+      }
+    });
+
+    document.querySelector(".aboutBtn").addEventListener("click", () => {
+      about.style.visibility = "visible";
+      if (window.innerWidth < 768) {
+        gsap.to(camera.position, { z: 1.75, duration: 2 });
+      } else {
+        gsap.to(camera.position, { z: 1.25, duration: 2 });
+      }
+      main.style.overflow = "auto";
+      container.style.display = "none";
+      gsap.to(sectionWrapper, {
+        y: 15,
+        duration: 2,
+      });
+      // sectionWrapper.style.transform = "translateY(15%)";
+      sectionWrapper.classList.add("about");
+      about.style.transition = "transform 2s ease";
+    });
+
+    document.querySelector(".workBtn").addEventListener("click", () => {
+      gsap.to(camera.position, { z: 1.25, duration: 2 });
+      main.style.overflow = "auto";
+      container.style.display = "none";
+      gsap.to(sectionWrapper, {
+        y: 15,
+        duration: 2,
+      });
+      // sectionWrapper.style.transform = "translateY(15%)";
+      sectionWrapper.classList.add("work");
+      work.style.transition = "transform 2s ease";
+    });
+  }, []);
+  // camera.position.x = 10;
+
   useFrame((state, delta) => {
-    // console.log(state);
-    // composer.renderer.render();
+    // console.log(delta);
     sphereRef.current.material.uniforms.uDisplacementStrength.value = 0.15;
     sphereRef.current.material.uniforms.uDistortionStrength.value = 0.5;
     sphereRef.current.material.uniforms.uFresnelMultiplier.value = 2.5;
-    sphereRef.current.material.uniforms.uTime.value += 0.005;
     sphereRef.current.material.uniforms.uLightAPosition.value.setFromSpherical(
       sphericalA
     );
     sphereRef.current.material.uniforms.uLightBPosition.value.setFromSpherical(
       sphericalB
     );
-  });
+    // console.log(state);
+    sphereRef.current.material.uniforms.uTime.value += 0.006;
+  }, []);
 
   return (
     <>
       <pointLight />
-      <OrbitControls />
+      <OrbitControls
+        minAzimuthAngle={-Math.PI / 4}
+        maxAzimuthAngle={Math.PI / 4}
+        minPolarAngle={Math.PI / 6}
+        maxPolarAngle={Math.PI - Math.PI / 6}
+      />
       <Effects disableGamma>
         <unrealBloomPass ref={effectRef} />
       </Effects>
       <mesh ref={sphereRef} toneMapped={false}>
         <sphereGeometry args={[1, 512, 512]} />
-        {/* <meshBasicMaterial
-          color={"blue"}
-          wireframe={true}
-          wireframeLinecap="butt"
-          wireframeLinejoin="round"
-          wireframeLinewidth={1}
-        /> */}
         <shaderMaterial
-          // toneMapped={false}
           uniforms={{
             uLightAColor: { value: lightA },
             uLightAPosition: { value: new THREE.Vector3(1, 1, 0) },

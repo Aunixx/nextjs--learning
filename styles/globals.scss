@@ -15,6 +15,15 @@ body {
 canvas {
   height: 100vh !important;
 }
+.canvasWrapper {
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
 
 .screen {
   background: linear-gradient(185deg, #4169e1 24.56%, #fa0339 176.52%);
@@ -26,30 +35,59 @@ canvas {
   justify-content: center;
   align-items: center;
   h1 {
-    font-size: 200px;
+    font-size: 100px;
   }
 }
 
-.container {
+.main {
   width: 100%;
   justify-content: center;
   align-items: center;
   display: flex;
+  flex-direction: column;
+  height: auto;
+  overflow: hidden;
+  width: calc(100vw - 200px);
+  margin: 0 auto;
   position: absolute;
-  top: 50%;
+  top: 0%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -0%);
+  transition: 2s ease-in-out;
+  @media (max-width: 1024px) and (min-width: 769px) {
+    width: calc(100vw - 48px);
+  }
+  @media (max-width: 768px) {
+    width: calc(100vw - 24px);
+  }
+}
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 .text {
   font-weight: 100;
-  font-size: clamp(2rem, -0.8169rem + 12.0188vw, 10rem);
+  font-size: clamp(2rem, -0.8169rem + 10.0188vw, 8rem);
   color: #fafafa;
   display: flex;
+}
+.btnWrapper {
+  @media (max-width: 768px) {
+    gap: 1rem !important;
+    .exploreBtn {
+      min-width: 7rem;
+      padding: 8px 10px;
+      font-size: 14px;
+    }
+  }
 }
 .exploreBtn {
   display: none;
   padding: 12px 18px;
-  border: 1px solid white;
+  min-width: 12rem;
+  // border: 1px solid white;
   border-radius: 8px;
   color: white;
   text-transform: uppercase;
@@ -59,6 +97,9 @@ canvas {
   font-weight: 400;
   width: max-content;
   background-color: transparent;
+  &:hover {
+    border: 1px solid white;
+  }
 }
 .endtext {
   flex-direction: column;
@@ -71,4 +112,69 @@ canvas {
 
 .dud {
   color: #757575;
+}
+.section-wrapper {
+  height: 100vh;
+  transform: translateY(100%);
+  width: 100%;
+  &.about {
+    .about-section {
+      display: flex;
+    }
+  }
+  &.work {
+    .work-section {
+      display: flex;
+    }
+  }
+  section {
+    display: none;
+  }
+  .about-section,
+  .work-section {
+    padding-top: 4rem;
+    width: 100%;
+    display: none;
+    border-radius: 0.5rem;
+    color: #e2e2e2;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    letter-spacing: -2px;
+    h2 {
+      font-size: 40px;
+      text-align: center;
+    }
+    p {
+      font-size: 24px;
+      text-align: center;
+      font-family: "Courier New", Courier, monospace;
+    }
+    .cards-wrapper {
+      display: flex;
+      width: 100%;
+      gap: 4rem;
+      flex-wrap: wrap;
+      margin-top: 48px;
+      .card {
+        flex: 1;
+        padding: 12px 18px;
+        border: 1px solid white;
+        border-radius: 8px;
+        color: white;
+        background-color: #e2e2e210;
+        height: 400px;
+        backdrop-filter: blur(5px);
+        flex-basis: 25%;
+        &.row-two {
+          flex-grow: 1;
+          flex-basis: 42%;
+        }
+        &.row-three {
+          flex-grow: 1;
+          flex-basis: 100%;
+        }
+      }
+    }
+  }
 }
