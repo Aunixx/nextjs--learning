@@ -59,6 +59,7 @@ const Slider = () => {
     <div className="slider">
       {[1, 2, 3, 4, 5, 6, 7].map((item, index) => (
         <div
+          key={item}
           className={`${
             index % 2 === 0 ? "slide-track-opposite" : "slide-track"
           } ${index % 3 === 0 ? "speed" : ""}`}
