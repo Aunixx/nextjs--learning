@@ -218,6 +218,12 @@ export default function Test({ cameraPosition }) {
   }, []);
 
   // camera.position.x = 10;
+  let Utime = 0;
+  if (window.innerWidth < 768) {
+    Utime = 0.006;
+  } else {
+    Utime = 0.009;
+  }
 
   useFrame((state, delta) => {
     // console.log(delta);
@@ -231,7 +237,8 @@ export default function Test({ cameraPosition }) {
       sphericalB
     );
     // console.log(sphereRef.current);
-    sphereRef.current.material.uniforms.uTime.value += 0.009;
+
+    sphereRef.current.material.uniforms.uTime.value += Utime;
   }, []);
 
   return (

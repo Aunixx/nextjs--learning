@@ -55,11 +55,11 @@ canvas {
   left: 50%;
   transform: translate(-50%, -0%);
   transition: 2s ease-in-out;
-  @media (max-width: 1024px) and (min-width: 769px) {
-    width: calc(100vw - 48px);
-  }
+  // @media (max-width: 1024px) and (min-width: 769px) {
+  //   width: calc(100vw - 48px);
+  // }
   @media (max-width: 768px) {
-    width: calc(100vw - 24px);
+    backdrop-filter: blur(75px);
   }
 }
 
@@ -71,7 +71,7 @@ canvas {
 }
 .text {
   font-weight: 100;
-  font-size: clamp(2rem, -0.8169rem + 10.0188vw, 8rem);
+  font-size: clamp(3rem, -0.8169rem + 10.0188vw, 8rem);
   color: #fafafa;
   display: flex;
 }
