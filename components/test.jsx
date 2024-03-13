@@ -159,6 +159,8 @@ export default function Test({ cameraPosition }) {
     const about = document.querySelector(".about-section");
     const work = document.querySelector(".work-section");
     const sectionWrapper = document.querySelector(".section-wrapper");
+    const slideOut = document.querySelector(".slide-out");
+    const slideIn = document.querySelector(".slide-in");
     const main = document.querySelector(".main");
 
     btnWrapper.addEventListener("mouseover", (e) => {
@@ -189,18 +191,48 @@ export default function Test({ cameraPosition }) {
       // }
       main.style.overflow = "auto";
       container.style.display = "none";
-      gsap.to(sphereRef.current.rotation, {
-        x: 2,
-        duration: 2,
-      });
+
       gsap.to(sectionWrapper, {
-        y: 15,
-        duration: 2,
+        y: 0,
+        delay: 1,
+      });
+      // gsap.set(sectionWrapper, {
+      //   opacity: 0,
+      // });
+      // gsap.to(sectionWrapper, {
+      //   opacity: 1,
+      //   delay: 2.25,
+      // });
+      gsap.to(slideIn, {
+        borderTopRightRadius: 0,
+        borderTopLeftRadius: 0,
+        scaleY: 1,
+        duration: 1,
+        onComplete: () => {
+          slideIn.style.transform = "scaleY(0)";
+          console.log("Slide in animation complete");
+        },
+      });
+      gsap.set(slideOut, {
+        scaleY: 1,
+        delay: 1,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
+      });
+      gsap.to(slideOut, {
+        scaleY: 0,
+        delay: 1.5,
+        borderBottomLeftRadius: "50%",
+        borderBottomRightRadius: "50%",
+        duration: 1,
+        onComplete: () => {
+          slideIn.style.transform = "scaleY(0)";
+        },
       });
 
       // sectionWrapper.style.transform = "translateY(15%)";
       sectionWrapper.classList.add("about");
-      about.style.transition = "transform 2s ease";
+      // about.style.transition = "transform 2s ease";
     });
 
     document.querySelector(".workBtn").addEventListener("click", () => {
