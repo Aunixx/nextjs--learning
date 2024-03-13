@@ -68,7 +68,7 @@ export default function Test2() {
   const { camera } = useThree();
 
   // camera.position.set(0, 20, 5);
-  camera.quaternion
+  camera.quaternion;
 
   useFrame((state, delta) => {
     // meshRef.current.rotation.x += 0.01;

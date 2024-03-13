@@ -41,7 +41,17 @@ export default function Home() {
       <Suspense fallback={<h1>Loading</h1>}>
         <div ref={canvasref}>
           <div className={styles.canvasWrapper}>
-            <Canvas shadows={true} color="#4169e1">
+            <Canvas
+              shadows={false}
+              // orthographic
+              // camera={{
+              //   near: 0.1,
+              //   far: 200,
+              //   position: [1, 0, 0],
+              //   zoom: 100,
+              // }}
+            >
+              <color attach="background" args={["#05050E"]} />
               <Test cameraPosition={cameraPosition} />
             </Canvas>
             <ScrambleText />

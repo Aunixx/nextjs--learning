@@ -78,15 +78,15 @@ export default function Test({ cameraPosition }) {
 
   const effectRef = useRef();
   useEffect(() => {
-    effectRef.current.radius = 0.3;
+    effectRef.current.radius = 25;
     effectRef.current.resolution.x = size.width;
     effectRef.current.resolution.y = size.height;
-    effectRef.current.strength = 0.8;
+    effectRef.current.strength = 2.5;
     effectRef.current.threshold = 0;
     effectRef.current.bloomTintColors.value = "#4169e1";
     effectRef.current.bloomTintColors.instance = new THREE.Color("#4169e1");
     effectRef.current.compositeMaterial.uniforms.uTintStrength = {
-      value: 0.15,
+      value: 0.05,
     };
     effectRef.current.compositeMaterial.fragmentShader = `
     varying vec2 vUv;
@@ -123,11 +123,11 @@ export default function Test({ cameraPosition }) {
 
   const sphereRef = useRef();
 
-  const colorA = "#89ABE3";
-  const intensityA = 1.85;
+  const colorA = "#66A5AD";
+  const intensityA = 2.85;
   const sphericalA = new THREE.Spherical(1, 2.561, -1.844);
   const lightA = new THREE.Color(colorA);
-  const colorB = "#EA738D";
+  const colorB = "#C4DFE6";
   const intensityB = 1.4;
   const sphericalB = new THREE.Spherical(1, 0.615, 2.049);
   const lightB = new THREE.Color(colorB);
@@ -151,7 +151,7 @@ export default function Test({ cameraPosition }) {
   if (window.innerWidth < 768) {
     gsap.to(camera.position, { z: 2.5 });
   } else {
-    gsap.to(camera.position, { z: 1.75 });
+    gsap.to(camera.position, { z: 1.45 });
   }
   useEffect(() => {
     const btnWrapper = document.querySelector(".btnWrapper");
@@ -182,17 +182,22 @@ export default function Test({ cameraPosition }) {
 
     document.querySelector(".aboutBtn").addEventListener("click", () => {
       about.style.visibility = "visible";
-      if (window.innerWidth < 768) {
-        gsap.to(camera.position, { z: 1.75, duration: 2 });
-      } else {
-        gsap.to(camera.position, { z: 1.25, duration: 2 });
-      }
+      // if (window.innerWidth < 768) {
+      //   gsap.to(camera.position, { z: 1.75, duration: 2 });
+      // } else {
+      //   gsap.to(camera.position, { z: 1.25, duration: 2 });
+      // }
       main.style.overflow = "auto";
       container.style.display = "none";
+      gsap.to(sphereRef.current.rotation, {
+        x: 2,
+        duration: 2,
+      });
       gsap.to(sectionWrapper, {
         y: 15,
         duration: 2,
       });
+
       // sectionWrapper.style.transform = "translateY(15%)";
       sectionWrapper.classList.add("about");
       about.style.transition = "transform 2s ease";
@@ -211,6 +216,7 @@ export default function Test({ cameraPosition }) {
       work.style.transition = "transform 2s ease";
     });
   }, []);
+
   // camera.position.x = 10;
 
   useFrame((state, delta) => {
@@ -224,8 +230,8 @@ export default function Test({ cameraPosition }) {
     sphereRef.current.material.uniforms.uLightBPosition.value.setFromSpherical(
       sphericalB
     );
-    // console.log(state);
-    sphereRef.current.material.uniforms.uTime.value += 0.006;
+    // console.log(sphereRef.current);
+    sphereRef.current.material.uniforms.uTime.value += 0.009;
   }, []);
 
   return (
