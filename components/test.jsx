@@ -1,66 +1,20 @@
-import { useThree, useLoader, useFrame, extend } from "@react-three/fiber";
-import React, { use, useEffect, useMemo, useRef, useState } from "react";
+import { useThree, useFrame, extend } from "@react-three/fiber";
+import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { MeshBasicMaterial, SpotLightShadow, TextureLoader } from "three";
-import floor from "../public/floor.png";
-import darkWood from "../public/dark_wood.png";
-import darkWoodRoughness from "../public/dark_wood_roughness.png";
-import floor2 from "../public/floor-2.png";
-// import floorroughness from "../public/floor-roughness.png";
-import floornormal from "../public/floor-normal.png";
-import floorheight from "../public/floor-height.png";
-import woodBright from "../public/Wood-Bright.png";
-import { useScroll } from "@react-hooks-library/core";
 
-// import studioLight from "../public/studiolight.obj";
-import {
-  Html,
-  OrbitControls,
-  PositionalAudio,
-  useFBX,
-  useObj,
-  useHelper,
-  ContactShadows,
-  SpotLight,
-  SpotLightShadows,
-  BakeShadows,
-  AccumulativeShadows,
-  Text3D,
-  useMatcapTexture,
-  Clone,
-  Sky,
-  Stars,
-  Center,
-  Float,
-  ScrollControls,
-  Scroll,
-} from "@react-three/drei";
-import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import {
-  Bloom,
-  DepthOfField,
-  EffectComposer,
-  Noise,
-  Vignette,
-} from "@react-three/postprocessing";
+import { OrbitControls } from "@react-three/drei";
+
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
-import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
-import marker from "../public/regular3.json";
-import { Physics, RigidBody } from "@react-three/rapier";
+
 import gsap from "gsap";
-// import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 
 import vertexShader from "../components/shaders/vertex.glsl";
 import fragmentShader from "../components/shaders/fragment.glsl";
-import { WebGLRenderTarget } from "three";
 import { Effects } from "@react-three/drei";
-// import { Bloom } from "@react-three/postprocessing";
 
 extend({ TextGeometry });
-// extend({ UnrealBloomPass });
 extend({ RenderPass, UnrealBloomPass });
 
 export default function Test({ cameraPosition }) {
@@ -142,12 +96,6 @@ export default function Test({ cameraPosition }) {
     sphereRef.current.geometry.computeTangents();
   }, [sphereRef]);
 
-  // useEffect(() => {
-  //   console.log(sphereRef.current);
-  //   console.log(sphereRef.current.__r3f.objects[1]?.uniforms.uTime.value);
-  //   setUTimeValue(sphereRef.current.material.uniforms.uTime.value);
-  //   gsap.to(camera.position, { z: cameraPosition });
-  // }, [cameraPosition]);
   if (window.innerWidth < 768) {
     gsap.to(camera.position, { z: 2.5 });
   } else {
@@ -157,99 +105,156 @@ export default function Test({ cameraPosition }) {
     const btnWrapper = document.querySelector(".btnWrapper");
     const container = document.querySelector(".container");
     const about = document.querySelector(".about-section");
+    const skills = document.querySelector(".skills-section");
     const work = document.querySelector(".work-section");
+    const contact = document.querySelector(".contact-section");
     const sectionWrapper = document.querySelector(".section-wrapper");
     const slideOut = document.querySelector(".slide-out");
     const slideIn = document.querySelector(".slide-in");
     const main = document.querySelector(".main");
-
+    const homeBtn = document.querySelector(".homeBtn");
+    setTimeout(
+      () =>
+        document.addEventListener("DOMContentLoaded", function () {
+          const sportify = document.querySelector("#sportify-iframe");
+          if (sportify) {
+            const bg = sportify.contentWindow.document.querySelector(
+              ".TrackListWidget_trackListGridContainer__GZGxh"
+            );
+            if (bg) {
+              bg.parentElement.parentElement.style.backgroundColor =
+                "#ffffff10 !important";
+            }
+          }
+        }),
+      3000
+    );
     btnWrapper.addEventListener("mouseover", (e) => {
       const btn = e.target.closest("button");
       if (btn) {
         if (btn.classList.contains("aboutBtn")) {
           sectionWrapper.classList.remove("work");
           sectionWrapper.classList.remove("contact");
+          sectionWrapper.classList.remove("skills");
           sectionWrapper.classList.add("about");
         } else if (btn.classList.contains("workBtn")) {
           sectionWrapper.classList.remove("about");
           sectionWrapper.classList.remove("contact");
+          sectionWrapper.classList.remove("skills");
           sectionWrapper.classList.add("work");
+        } else if (btn.classList.contains("skillsBtn")) {
+          sectionWrapper.classList.remove("about");
+          sectionWrapper.classList.remove("contact");
+          sectionWrapper.classList.remove("work");
+          sectionWrapper.classList.add("skills");
         } else {
           sectionWrapper.classList.remove("about");
           sectionWrapper.classList.remove("work");
           sectionWrapper.classList.add("contact");
+          sectionWrapper.classList.remove("skills");
         }
       }
     });
 
-    document.querySelector(".aboutBtn").addEventListener("click", () => {
-      about.style.visibility = "visible";
-      // if (window.innerWidth < 768) {
-      //   gsap.to(camera.position, { z: 1.75, duration: 2 });
-      // } else {
-      //   gsap.to(camera.position, { z: 1.25, duration: 2 });
-      // }
-      main.style.overflow = "auto";
-      container.style.display = "none";
-
+    function PageTransition() {
       gsap.to(sectionWrapper, {
         y: 0,
-        delay: 1,
+        delay: 0.25,
       });
-      // gsap.set(sectionWrapper, {
-      //   opacity: 0,
-      // });
-      // gsap.to(sectionWrapper, {
-      //   opacity: 1,
-      //   delay: 2.25,
-      // });
+
       gsap.to(slideIn, {
-        borderTopRightRadius: 0,
-        borderTopLeftRadius: 0,
-        scaleY: 1,
-        duration: 1,
+        scaleX: 1,
+        duration: 0.25,
         onComplete: () => {
-          slideIn.style.transform = "scaleY(0)";
+          slideIn.style.transform = "scaleX(0)";
+          console.log(slideIn.style, "Slide in animation complete");
+        },
+      });
+      gsap.set(slideOut, {
+        scaleX: 1,
+        delay: 0.25,
+      });
+      gsap.to(slideOut, {
+        scaleX: 0,
+        delay: 0.75,
+
+        duration: 0.25,
+        onComplete: () => {
+          homeBtn.style.display = "block";
+        },
+      });
+    }
+    homeBtn.addEventListener("click", () => {
+      sectionWrapper.classList.remove("about");
+      sectionWrapper.classList.remove("work");
+      sectionWrapper.classList.remove("contact");
+
+      gsap.to(slideIn, {
+        transformOrigin: "left",
+        scaleX: 1,
+        duration: 0.25,
+        onComplete: () => {
+          slideIn.style.transform = "scaleX(0)";
           console.log("Slide in animation complete");
         },
       });
       gsap.set(slideOut, {
-        scaleY: 1,
-        delay: 1,
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
+        scaleX: 1,
+        delay: 0.25,
+        // borderBottomRightRadius: 0,
+        // borderTopRightRadius: 0,
       });
       gsap.to(slideOut, {
-        scaleY: 0,
-        delay: 1.5,
-        borderBottomLeftRadius: "50%",
-        borderBottomRightRadius: "50%",
-        duration: 1,
+        scaleX: 0,
+        delay: 0.75,
+
+        duration: 0.25,
         onComplete: () => {
-          slideIn.style.transform = "scaleY(0)";
+          homeBtn.style.display = "none";
+          container.style.display = "flex";
         },
       });
+    });
 
-      // sectionWrapper.style.transform = "translateY(15%)";
+    document.querySelector(".skillsBtn").addEventListener("click", () => {
+      skills.style.visibility = "visible";
+      sectionWrapper.style.display = "block";
+      container.style.display = "none";
+      PageTransition();
       sectionWrapper.classList.add("about");
-      // about.style.transition = "transform 2s ease";
     });
 
     document.querySelector(".workBtn").addEventListener("click", () => {
-      gsap.to(camera.position, { z: 1.25, duration: 2 });
       main.style.overflow = "auto";
       container.style.display = "none";
       gsap.to(sectionWrapper, {
-        y: 15,
-        duration: 2,
+        y: 0,
       });
-      // sectionWrapper.style.transform = "translateY(15%)";
+      PageTransition();
       sectionWrapper.classList.add("work");
       work.style.transition = "transform 2s ease";
     });
+
+    document.querySelector(".aboutBtn").addEventListener("click", () => {
+      about.style.visibility = "visible";
+      container.style.display = "none";
+      gsap.to(sectionWrapper, {
+        y: 0,
+      });
+      PageTransition();
+      sectionWrapper.classList.add("about");
+    });
+    document.querySelector(".contactBtn").addEventListener("click", () => {
+      contact.style.visibility = "visible";
+      container.style.display = "none";
+      gsap.to(sectionWrapper, {
+        y: 0,
+      });
+      PageTransition();
+      sectionWrapper.classList.add("contact");
+    });
   }, []);
 
-  // camera.position.x = 10;
   let Utime = 0;
   if (window.innerWidth < 768) {
     Utime = 0.006;
@@ -258,7 +263,6 @@ export default function Test({ cameraPosition }) {
   }
 
   useFrame((state, delta) => {
-    // console.log(delta);
     sphereRef.current.material.uniforms.uDisplacementStrength.value = 0.15;
     sphereRef.current.material.uniforms.uDistortionStrength.value = 0.5;
     sphereRef.current.material.uniforms.uFresnelMultiplier.value = 2.5;
@@ -268,7 +272,6 @@ export default function Test({ cameraPosition }) {
     sphereRef.current.material.uniforms.uLightBPosition.value.setFromSpherical(
       sphericalB
     );
-    // console.log(sphereRef.current);
 
     sphereRef.current.material.uniforms.uTime.value += Utime;
   }, []);
