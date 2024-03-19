@@ -136,8 +136,8 @@ const AboutSection = () => {
               </div>
               <div className="left-right-top">
                 <p>
-                  "People who are crazy enough to think they can change the
-                  world are the ones who actually do."
+                  People who are crazy enough to think they can change the world
+                  are the ones who actually do.
                 </p>
                 <p>~Steve Jobs</p>
               </div>
