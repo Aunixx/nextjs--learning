@@ -47,7 +47,7 @@ const ContactForm = () => {
     >
       {({ isSubmitting, errors, touched }) => (
         <Form ref={formRef}>
-          <h2>Let's Connect</h2>
+          <h2>Lets Connect</h2>
           {/* <label htmlFor="from_name">Name</label> */}
           <Field
             type="text"
